@@ -1,0 +1,4 @@
+const C='harit-v4',F=['./','index.html','styles.css','upgrade.css','launch.css','app.js','scenes.js','vision-pipeline.js','i18n.js','future.js','fireworks-house.js','launch.js','diwali.js','CREDITS.md','vendor/three.min.js','vendor/chart.umd.js'];
+self.addEventListener('install',e=>e.waitUntil(caches.open(C).then(c=>c.addAll(F)).then(()=>self.skipWaiting())));
+self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(k=>Promise.all(k.filter(x=>x!==C).map(x=>caches.delete(x)))).then(()=>self.clients.claim())));
+self.addEventListener('fetch',e=>{if(e.request.method!=='GET'||new URL(e.request.url).origin!==location.origin)return;e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(n=>{const cp=n.clone();caches.open(C).then(c=>c.put(e.request,cp));return n;}).catch(()=>caches.match('index.html'))));});

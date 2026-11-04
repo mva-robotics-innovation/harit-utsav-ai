@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#07131d"><link rel="manifest" href="manifest.webmanifest"><link rel="icon" href="assets/icon-192.png"><meta property="og:title" content="HARIT UTSAV AI — Sustainable Festival Intelligence"><meta property="og:description" content="Cinematic fireworks studio, AI vision monitor, live sensors and green-festival research."><meta property="og:type" content="website"><meta property="og:image" content="assets/fw-1.jpg">
+<title>HARIT UTSAV AI | Sustainable Festival Intelligence</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" href="upgrade.css">
+<link rel="stylesheet" href="launch.css">
+<meta name="description" content="HARIT UTSAV AI: sustainable festival intelligence — vision monitor, air-quality sensors, thermal alerts and green-festival research.">
+</head>
+<body>
+<div class="ambient"></div>
+<div id="gate" role="dialog" aria-label="Welcome"><div class="gate-box"><div class="gate-ring"></div><div class="eyebrow">MVA ROBOTICS INNOVATION ORG · JRU RANCHI</div><h1>HARIT <span>UTSAV AI</span></h1><p>A cinematic, sound-enabled festival experience. Best with headphones.</p><button class="btn primary" id="enterSound">Enter · sound on 🔊</button><button class="btn secondary" id="enterSilent">Enter silently</button></div></div><canvas id="bgfx" aria-hidden="true"></canvas>
+
+<header class="topbar">
+  <a class="brand" href="#home"><span class="brand-mark">HU</span><span>HARIT <b>UTSAV AI</b><small>FESTIVAL SUSTAINABILITY INTELLIGENCE</small></span></a>
+  <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">☰</button>
+  <nav id="nav">
+    <a href="#home" class="active">Home</a><a href="#diwali">Diwali</a><a href="#showcase">Gallery</a><a href="#lab3d">3D Lab</a><a href="#house">Fireworks</a><a href="#future">Future Lab</a><a href="#monitor">Vision AI</a><a href="#intelligence">Command Centre</a><a href="#impact">Impact Lab</a><a href="#research">Research</a><a href="#flyer">Team</a>
+  </nav>
+  <button class="lang-btn" id="langBtn" aria-label="हिन्दी में बदलें">हिं</button><a class="top-cta" href="#monitor">Launch AI Centre ↗</a>
+</header>
+
+<main>
+<section class="hero section" id="home">
+  <div class="hero-copy">
+    <div class="eyebrow"><i></i> MVA ROBOTICS INNOVATION ORG · JRU RANCHI</div>
+    <h1>Celebrate tradition.<br><span>Protect our tomorrow.</span></h1>
+    <p class="hero-lead">An AI-assisted sustainable festival platform combining camera-based visual event monitoring, green-fireworks research, environmental awareness and measurable community impact.</p>
+    <div class="hero-actions"><a class="btn primary" href="#monitor">Start camera monitor <span>→</span></a><a class="btn secondary" href="#research">Explore the research</a></div>
+    <div class="hero-note"><span class="pulse"></span> Browser-based prototype · Camera processing stays on this device</div>
+  </div>
+  <div class="hero-visual"><canvas id="heroScene" aria-label="Interactive 3D Earth with a diya"></canvas>
+    <div class="float-card fc-one"><span>✦</span> Cleaner celebrations</div><div class="float-card fc-two"><span>◉</span> Visual event monitor</div><div class="float-card fc-three"><span>♧</span> Community impact</div>
+  </div>
+</section>
+
+<div class="ticker" aria-hidden="true"><div>🎆 GREEN FIREWORKS · SWAS · STAR · SAFAL · AI VISION · LIVE SENSORS · DIGITAL TWIN · POWER BI EXPORT · SYNTH SOUND · 🎆 GREEN FIREWORKS · SWAS · STAR · SAFAL · AI VISION · LIVE SENSORS · DIGITAL TWIN · POWER BI EXPORT · SYNTH SOUND · </div></div>
+
+<section class="stats section">
+  <div><strong>3</strong><span>Green cracker families<br>highlighted by CSIR-NEERI</span></div>
+  <div><strong>30–40%</strong><span>Reported particulate reduction<br>for selected green crackers*</span></div>
+  <div><strong>5</strong><span>Research-to-awareness<br>platform modules</span></div>
+  <div><strong>0</strong><span>Camera frames uploaded<br>by this local demo</span></div>
+  <p class="footnote">*Figures refer to selected CSIR-NEERI green-cracker categories as described in the supplied presentation; reductions do not mean zero emissions.</p>
+</section>
+
+<section class="section" id="diwali"><div class="section-heading"><div><div class="eyebrow">🪔 DIWALI GREETING · LIVE FIREWORKS SHOW</div><h2>Happy <span>Diwali</span></h2><p>A fireworks greeting from Ashish Kumar and Hephzibah Toppo. Watch the night sky spell out Jharkhand Rai University and MVA Robotics Innovation Org. Turn sound on for the full show.</p></div><button class="btn primary" id="dwPlay">▶ Play greeting</button></div>
+<div class="dw-logos"><figure id="dwjru"><img src="assets/logos/jru.png" alt="Jharkhand Rai University, Ranchi logo"></figure><figure id="dwmva"><img src="assets/logos/mva.png" alt="MVA Robotics Innovation Org logo"></figure></div>
+<div class="dw-stage"><canvas id="dwCanvas" aria-label="Fireworks greeting that spells Happy Diwali, Jharkhand Rai University and MVA Robotics Innovation Org"></canvas><div class="dw-bar"><i id="dwBar"></i></div></div>
+<div class="fl-controls"><button class="btn secondary" id="dwSnap">📷 Save frame</button><span class="muted-copy" id="dwVoice">Voice plays when sound is on.</span><span class="muted-copy">Shubh Deepavali from the MVA Robotics Innovation Org team, Jharkhand Rai University, Ranchi.</span></div></section>
+
+<section class="section" id="showcase"><div class="section-heading"><div><div class="eyebrow">CINEMATIC SHOWCASE · FULL HD</div><h2>The night <span>lights up</span></h2><p>Real photographs with credits, plus Full-HD generated artwork. Click an image to enlarge it, or fire a live salvo over the page.</p></div><button class="btn primary" id="scBoom">🎆 Fire a live salvo</button></div><div class="sc-stage" id="scStage"><img class="sc-slide" src="assets/fw-1.jpg" alt="Peony Night" ><img class="sc-slide" src="assets/fw-2.jpg" alt="Willow Waterfall" loading="lazy"><img class="sc-slide" src="assets/fw-3.jpg" alt="Heart &amp; Ring" loading="lazy"><img class="sc-slide" src="assets/fw-4.jpg" alt="Green Diwali · diyas" loading="lazy"><img class="sc-slide" src="assets/fw-5.jpg" alt="Golden Crown" loading="lazy"><img class="sc-slide" src="assets/fw-6.jpg" alt="Festival of Lights" loading="lazy"><div class="sc-cap" id="scCap"></div><div class="sc-credit" id="scCredit"></div><div class="sc-nav"><button id="scPrev" aria-label="Previous">←</button><button id="scNext" aria-label="Next">→</button></div></div><div class="sc-thumbs" id="scThumbs"></div></section>
+
+<section class="section intro-grid">
+  <div><div class="eyebrow">THE IDEA</div><h2>Indian festivals deserve<br><span>an intelligent green future.</span></h2></div>
+  <p>HARIT UTSAV AI explores how accessible technology can help communities understand visible fireworks activity, learn about pollution, discover safer celebration practices and make sustainability measurable—without replacing cultural traditions.</p>
+</section>
+
+<section class="section" id="lab3d">
+  <div class="section-heading"><div><div class="eyebrow">MODULE 00 · 3D EXPLORER</div><h2>See the system <span>in 3D</span></h2><p>Interactive models rendered live in your browser. Drag any scene to rotate it.</p></div></div>
+  <div class="lab-grid">
+    <div class="scene-card"><canvas id="nodeScene" aria-label="3D model of the HARIT sensor node"></canvas><h3>HARIT sensor node</h3><p>Concept enclosure for the PM, CO₂ and thermal bridge described in the sensor protocol.</p><span class="hint">DRAG TO ROTATE · CONCEPT MODEL</span></div>
+    <div class="scene-card"><canvas id="burstScene" aria-label="Conventional versus green cracker particle burst"></canvas><h3>Conventional vs green burst</h3><p>Left: wider, denser particle plume. Right: reduced plume. An illustrative animation, not measured data.</p><span class="hint">DRAG TO ROTATE · ILLUSTRATIVE</span></div>
+    <div class="scene-card"><canvas id="thermalScene" aria-label="3D thermal hotspot map"></canvas><h3>Thermal hotspot map</h3><p>An 8×8 radiometric array shown as heat columns. Illustrative animation, not live data.</p><span class="hint">DRAG TO ROTATE · ILLUSTRATIVE</span></div>
+  </div>
+</section>
+
+<section class="section monitor-section" id="monitor">
+  <div class="section-heading"><div><div class="eyebrow">MODULE 01 · COMPUTER VISION</div><h2>Live Festival <span>Visual Monitor</span></h2><p>Use a webcam to observe bright flashes, motion and possible smoke-like visual changes in the camera view.</p></div><div class="live-tag"><i></i> LOCAL CAMERA MODE</div></div>
+  <div class="monitor-grid">
+    <div class="camera-card">
+      <div class="camera-head"><span><i class="dot"></i> CAMERA FEED</span><span id="cameraState">Camera offline</span></div>
+      <div class="video-wrap"><video id="video" autoplay muted playsinline></video><canvas id="analysisCanvas" hidden></canvas><div class="camera-placeholder" id="placeholder"><div class="cam-icon">⌁</div><b>Camera preview</b><span>Allow camera access to begin local visual analysis.</span></div><div class="scan-line"></div><div class="camera-overlay"><span>HARIT / CV-01</span><span id="clock">--:--:--</span></div></div>
+      <div class="camera-controls"><button class="btn primary" id="startCamera">Enable camera</button><button class="btn secondary" id="stopCamera" disabled>Stop</button><button class="btn secondary" id="captureFrame" disabled>Save snapshot</button></div>
+      <p class="privacy-note">🔒 Video is analysed in your browser. No recording or upload is performed by this prototype.</p>
+    </div>
+    <div class="analysis-card">
+      <div class="analysis-head"><span>LIVE ANALYSIS</span><span class="model-chip">HEURISTIC CV · DEMO</span></div>
+      <div class="status-panel" id="statusPanel"><div class="status-icon">◎</div><div><small>MONITOR STATUS</small><strong id="statusText">Awaiting camera</strong><p id="statusDesc">Start the camera to analyse the scene.</p></div></div>
+      <div class="metric"><div><span>Bright-flash signal</span><b id="flashVal">0%</b></div><div class="meter"><i id="flashBar"></i></div></div>
+      <div class="metric"><div><span>Scene motion</span><b id="motionVal">0%</b></div><div class="meter"><i id="motionBar"></i></div></div>
+      <div class="metric"><div><span>Warm-colour pixels</span><b id="warmVal">0%</b></div><div class="meter"><i id="warmBar"></i></div></div>
+      <div class="metric"><div><span>Haze-like contrast change</span><b id="hazeVal">0%</b></div><div class="meter"><i id="hazeBar"></i></div></div>
+      <div class="event-log"><div class="log-title">EVENT LOG <button id="clearLog">Clear</button></div><ul id="eventLog"><li class="muted">No events recorded yet.</li></ul></div>
+    </div>
+  </div>
+  <div class="disclaimer"><b>Prototype limitation:</b> This first version uses image-change heuristics, not a trained firecracker-recognition model. A bright light, vehicle, candle or camera movement can trigger a signal; smoke may be missed. It cannot identify a specific firecracker, measure air quality, determine legality or replace human supervision. Do not use it for enforcement or emergency decisions.</div>
+</section>
+
+<section class="section impact-section" id="impact">
+  <div class="section-heading"><div><div class="eyebrow">MODULE 02 · SUSTAINABILITY</div><h2>Festival <span>Impact Lab</span></h2><p>Estimate how choices change the scale of a community celebration. These are awareness estimates, not certified emissions measurements.</p></div></div>
+  <div class="impact-grid">
+    <div class="calculator card">
+      <h3>Community celebration planner</h3>
+      <label>Expected participants <output id="peopleOut">250</output></label><input id="people" type="range" min="25" max="2000" step="25" value="250">
+      <label>Fireworks activity level <output id="activityOut">Medium</output></label><input id="activity" type="range" min="0" max="2" step="1" value="1">
+      <label>Green alternatives adoption <output id="greenOut">50%</output></label><input id="green" type="range" min="0" max="100" step="5" value="50">
+      <div class="estimate"><small>ILLUSTRATIVE CONVENTIONAL-ACTIVITY INDEX</small><strong id="indexOut">125</strong><span id="indexDesc">Relative index points · not µg/m³ or measured pollution</span></div>
+    </div>
+    <div class="pledge card"><div class="pledge-icon">🌱</div><h3>Make a green festival pledge</h3><p>Choose practical actions for your campus, neighbourhood or community event.</p>
+      <label class="check"><input type="checkbox" class="pledgeCheck"> Prefer diya / LED lighting over excess decorative power use</label>
+      <label class="check"><input type="checkbox" class="pledgeCheck"> Avoid loud and high-smoke fireworks</label>
+      <label class="check"><input type="checkbox" class="pledgeCheck"> Segregate and responsibly dispose of festival waste</label>
+      <label class="check"><input type="checkbox" class="pledgeCheck"> Share verified green-festival awareness</label>
+      <div class="pledge-extra"><input id="pledgeName" maxlength="32" placeholder="Your name (for certificate)" aria-label="Your name"><button class="btn secondary" id="certBtn" disabled>Download certificate ↓</button></div><div class="pledge-progress"><i id="pledgeBar"></i></div><span id="pledgeCount">0 of 4 actions selected</span>
+    </div>
+  </div>
+</section>
+
+<section class="section research-section" id="research">
+  <div class="section-heading"><div><div class="eyebrow">MODULE 03 · RESEARCH EXPLORER</div><h2>What makes a cracker <span>greener?</span></h2><p>Research highlights adapted from the supplied AI Green Fireworks presentation.</p></div></div>
+  <div class="research-cards">
+    <article class="research-card"><span class="research-num">01 / INDIA</span><div class="research-icon">💧</div><h3>SWAS</h3><b>Safe Water Releaser</b><p>Designed to release water vapour to help suppress dust. The supplied deck notes no potassium nitrate or sulphur.</p><span class="tag">CSIR-NEERI case study</span></article>
+    <article class="research-card"><span class="research-num">02 / INDIA</span><div class="research-icon">⚙️</div><h3>STAR</h3><b>Safe Thermite Cracker</b><p>The supplied deck describes a formulation direction without potassium nitrate or sulphur.</p><span class="tag">CSIR-NEERI case study</span></article>
+    <article class="research-card"><span class="research-num">03 / INDIA</span><div class="research-icon">✨</div><h3>SAFAL</h3><b>Safe Minimal Aluminium</b><p>The deck describes aluminium being minimised and used in the flash for ignition.</p><span class="tag">CSIR-NEERI case study</span></article>
+  </div>
+  <div class="research-bottom">
+    <div><div class="eyebrow">AI RESEARCH PIPELINE</div><h3>From simulation to responsible validation</h3><p>Computational research can help screen material properties before laboratory validation. The supplied presentation describes DFT, graph neural networks, generative models and combustion tools as research directions—not as a deployed consumer-firework design engine.</p></div>
+    <div class="pipeline"><span>DFT / Quantum chemistry</span><b>↓</b><span>ML property prediction</span><b>↓</b><span>Simulation & emission estimates</span><b>↓</b><span>Independent lab testing</span></div>
+  </div>
+</section>
+
+<section class="section principles">
+  <div class="eyebrow">MODULE 04 · FESTIVAL TOOLKIT</div><h2>Tradition, with <span>responsibility.</span></h2>
+  <div class="toolkit-grid">
+    <div><i>🪔</i><h3>Light responsibly</h3><p>Use traditional diyas safely or energy-efficient LED lighting.</p></div>
+    <div><i>♻️</i><h3>Waste smartly</h3><p>Separate dry, wet and recyclable festival waste.</p></div>
+    <div><i>🔊</i><h3>Respect quiet zones</h3><p>Consider infants, older adults, patients, animals and sensitive areas.</p></div>
+    <div><i>📣</i><h3>Share awareness</h3><p>Use verified local guidance and follow current official rules.</p></div>
+  </div>
+</section>
+
+<section class="section flyer-section" id="flyer">
+  <div class="section-heading"><div><div class="eyebrow">MODULE 05 · DIGITAL PRESENTATION</div><h2>Meet the <span>project team</span></h2><p>Student-led innovation initiative · Jharkhand Rai University, Ranchi.</p></div><a class="btn secondary" href="assets/harit-utsav-ai-flyer.png" download>Download flyer ↓</a></div>
+  <div class="flyer-wrap"><img src="assets/harit-utsav-ai-flyer.png" alt="HARIT UTSAV AI rebranded project flyer"><div class="flyer-caption"><span>HARIT UTSAV AI</span><span>Tradition Meets Technology · 2026</span></div></div>
+  <p class="footnote" style="max-width:790px;margin:12px auto 0">Flyer artwork is a promotional concept. Any dashboard readings or eco-score shown in the artwork are illustrative graphics, not live sensor measurements.</p>
+  <div class="team-grid">
+    <div class="team-card"><span>FOUNDER & DIRECTOR</span><h3>Ashish Kumar</h3><p>MCA · Jharkhand Rai University</p><small>MVA Robotics Innovation Org</small></div>
+    <div class="team-card"><span>CO-FOUNDER / INNOVATION LEAD</span><h3>Hephzibah Toppo</h3><p>BCA · Jharkhand Rai University</p><small>MVA Robotics Innovation Org</small></div>
+  </div>
+</section>
+
+<section class="section house" id="house">
+  <div class="section-heading"><div><div class="eyebrow">THE FIREWORKS HOUSE</div><h2>Design, hear &amp; <span>record</span> a show</h2><p>Eight shell types, a synthesised sound engine, choreographed shows and one-click video capture. Pick a shell, tap the sky, then record your own clip.</p></div><div class="live-tag"><i></i> SYNTHESISED SOUND · NO AUDIO FILES</div></div>
+  <div class="house-stage" id="fwhStage"><canvas id="fwhCanvas" aria-label="Interactive fireworks show over a city skyline"></canvas>
+   <div class="fwh-hud"><span>SHELLS <b id="hShells">0</b></span><span>PARTICLES <b id="hParts">0</b></span><span>FPS <b id="hFps">60</b></span><canvas id="fwhMeter" width="160" height="40" aria-hidden="true"></canvas></div>
+   <button class="sound-gate" id="fwhSound" data-on="0">🔊 Tap to enable sound</button><div class="show-bar"><i id="showBar"></i></div></div>
+  <div class="house-panel">
+   <div class="grp"><h4>SHELL TYPE · click to fire</h4><div class="seg"><button class="chip on" data-shell="peony">Peony</button><button class="chip" data-shell="willow">Willow</button><button class="chip" data-shell="ring">Ring</button><button class="chip" data-shell="heart">Heart</button><button class="chip" data-shell="spiral">Spiral</button><button class="chip" data-shell="palm">Palm</button><button class="chip" data-shell="strobe">Strobe</button><button class="chip" data-shell="saturn">Saturn</button><button class="chip" data-shell="kamuro">Kamuro</button><button class="chip" data-shell="crossette">Crossette</button><button class="chip" data-shell="comet">Comet</button></div><h4>SMOKE</h4><div class="seg"><button class="chip on" data-smoke="0">Green (low smoke)</button><button class="chip" data-smoke="1">Conventional smoke</button></div></div>
+   <div class="grp"><h4>SOUND DESIGN</h4><div class="seg"><button class="chip" data-preset="real">Real recordings</button><button class="chip on" data-preset="epic">Epic stadium</button><button class="chip" data-preset="cinematic">Cinematic boom</button><button class="chip" data-preset="synth">Synth arpeggio</button><button class="chip" data-preset="chimes">Soft chimes</button></div><label class="chk">Volume <input id="fwhVol" type="range" min="0" max="100" value="70"></label><label class="chk"><input type="checkbox" id="fwhMusic"> Beat track</label><label class="chk">Tempo <output id="fwhBpmOut">110</output> BPM <input id="fwhBpm" type="range" min="80" max="140" value="110"></label></div>
+   <div class="grp"><h4>SHOW COMPOSER</h4><div class="seg"><button class="chip" data-show="grand">★ Grand finale</button><button class="chip" data-show="finale">Diwali finale</button><button class="chip" data-show="waltz">Willow waltz</button><button class="chip" data-show="pulse">Green pulse</button><button class="chip" data-show="stop">Stop</button></div><h4>CAPTURE</h4><div class="seg"><button class="btn primary" id="fwhRec">● Record video</button><button class="btn secondary" id="fwhSnap">📷 Save image</button><button class="btn secondary" id="fwhFull">⛶ Fullscreen</button></div></div>
+  </div>
+  <p class="muted-copy" id="clipMsg">Video and images are captured from the canvas in your browser; nothing is uploaded.</p>
+  <video id="clip" controls playsinline hidden></video><a class="btn secondary" id="clipDl" download="harit-fireworks-show.webm" hidden>Download video (.webm) ↓</a>
+  <div class="snaps" id="snaps"></div>
+  <div class="eyebrow" style="margin-top:34px">ARTWORK GALLERY · GENERATED STILLS</div>
+  <div class="gallery"><figure><img src="assets/fw-1.jpg" alt="Peony Night" loading="lazy"><figcaption>Peony Night</figcaption></figure><figure><img src="assets/fw-2.jpg" alt="Willow Waterfall" loading="lazy"><figcaption>Willow Waterfall</figcaption></figure><figure><img src="assets/fw-3.jpg" alt="Heart &amp; Ring" loading="lazy"><figcaption>Heart &amp; Ring</figcaption></figure><figure><img src="assets/fw-4.jpg" alt="Green Diwali · diyas" loading="lazy"><figcaption>Green Diwali · diyas</figcaption></figure><figure><img src="assets/fw-5.jpg" alt="Golden Crown" loading="lazy"><figcaption>Golden Crown</figcaption></figure><figure><img src="assets/fw-6.jpg" alt="Festival of Lights" loading="lazy"><figcaption>Festival of Lights</figcaption></figure></div>
+  <p class="footnote">Gallery images are computer-generated artwork (tools/make_images.py), not photographs. Sounds are synthesised live in your browser. Real fireworks are subject to local law and safety rules.</p>
+</section>
+
+<section class="section" id="future">
+  <div class="section-heading"><div><div class="eyebrow">ADVANCED FUTURE LAB</div><h2>Fireworks, data &amp; <span>AI vision</span> studio</h2><p>Interactive labs for visual storytelling, analytics, computer vision and a smart-venue digital twin. Press Ctrl+K for the command palette or use voice control.</p></div><button class="btn secondary" id="openPalette">⌘ Command palette</button></div>
+  <div class="fl-grid">
+   <div class="card fl-card wide"><div class="sensor-title"><div><span class="eyebrow">01 / FIREWORKS STUDIO</span><h3>Conventional vs green fireworks, rendered live</h3></div><span class="connection-pill safe-pill">ILLUSTRATIVE ANIMATION</span></div>
+    <canvas id="fwCanvas" aria-label="Animated fireworks display"></canvas>
+    <div class="fl-controls"><div class="seg"><button class="chip on" data-fw="peony">Peony</button><button class="chip" data-fw="willow">Willow</button><button class="chip" data-fw="ring">Ring</button></div><div class="seg"><button class="chip on" data-mode="green">Green (low smoke)</button><button class="chip" data-mode="conv">Conventional (smoke)</button></div><label class="chk"><input type="checkbox" id="cvToggle"> CV overlay (simulated)</label><button class="btn primary" id="fwShow">Launch show</button><span class="idx">Plume index <b id="fwIdx">0</b></span></div>
+    <p class="muted-copy">Click the sky to fire a shell. The plume index and CV boxes are simulated visuals for explanation, not measurements or real detections.</p></div>
+   <div class="card fl-card wide"><div class="sensor-title"><div><span class="eyebrow">02 / ANALYTICS</span><h3>Festival air-quality scenario dashboard</h3></div><button class="text-button" id="exportBI">Export CSV for Power BI ↓</button></div>
+    <div class="fl-controls"><div class="seg" id="citySlicer"></div><label class="chk">Green adoption <output id="adoptOut">50%</output><input id="adopt" type="range" min="0" max="100" step="10" value="50"></label></div>
+    <div class="kpis"><div><small>FESTIVAL-DAY PEAK (CONV.)</small><b id="kPeak">—</b></div><div><small>WITH GREEN SCENARIO</small><b id="kGreen">—</b></div><div><small>REDUCTION</small><b id="kRed">—</b></div><div><small>DAYS ABOVE 60 µg/m³</small><b id="kDays">—</b></div></div>
+    <div class="chart-row"><div class="chart-box"><canvas id="lineChart"></canvas></div><div class="chart-box"><canvas id="barChart"></canvas></div></div>
+    <p class="muted-copy">Model data is illustrative: baselines and the up-to-40% reduction cap are assumptions, not measurements. The CSV opens directly in Power BI, Excel or Tableau; swap in real sensor exports for actual reporting.</p></div>
+   <div class="card fl-card"><div class="sensor-title"><div><span class="eyebrow">03 / COMPUTER VISION LAB</span><h3>Image analyser</h3></div></div>
+    <div class="pipe-chips"><span>Capture</span><span>Pre-process</span><span>Detect</span><span>Confirm 3/5</span><span>Human review</span></div>
+    <label class="btn secondary" for="imgIn">Upload an image</label><input id="imgIn" type="file" accept="image/*" hidden>
+    <canvas id="imgCanvas" width="480" height="270" aria-label="Analysed image with highlighted warm and bright pixels"></canvas><p id="imgOut" class="muted-copy">Upload a festival photo to highlight warm-colour (red tint) and very bright (blue tint) pixels. Everything stays in your browser.</p></div>
+   <div class="card fl-card"><div class="sensor-title"><div><span class="eyebrow">04 / DIGITAL TWIN</span><h3>Smart-venue twin (concept)</h3></div></div>
+    <canvas id="twinScene" aria-label="3D digital twin of a festival venue"></canvas>
+    <div class="fl-controls"><label class="chk"><input type="checkbox" data-layer="sensors" checked> Sensors</label><label class="chk"><input type="checkbox" data-layer="plume" checked> Smoke plume</label><label class="chk"><input type="checkbox" data-layer="drone" checked> Patrol drone</label></div>
+    <div class="pipe-chips"><span>Edge AI</span><span>LoRaWAN mesh</span><span>Drone patrol</span><span>AR guide</span><span>Satellite AQI</span></div><p class="muted-copy">Concept visualisation with simulated sensors, plume and drone. Roadmap chips are future ideas, not shipped features.</p></div>
+  </div>
+</section>
+
+<section class="section cta-section">
+  <div><div class="eyebrow">MVA ROBOTICS INNOVATION ORG</div><h2>Celebrate India.<br><span>Innovate for Earth.</span></h2><p>We start from Jharkhand. We scale for Bharat.</p></div>
+  <a class="btn primary" href="mailto:mvaroboticsinnovation@gmail.com">Connect with the team ↗</a>
+</section>
+
+<section class="section command-section" id="intelligence">
+  <div class="section-heading"><div><div class="eyebrow">ADVANCED MODULE · ENVIRONMENTAL AI</div><h2>Green Festival <span>Command Centre</span></h2><p>One workspace for visual signals, live air-quality sensors, thermal readings, alerts and greener choices.</p></div><div class="live-tag"><i></i> EDGE-FIRST MONITORING</div></div>
+  <div class="command-grid">
+    <div class="sensor-card card">
+      <div class="sensor-title"><div><span class="eyebrow">01 / AIR QUALITY</span><h3>Environmental sensors</h3></div><span class="connection-pill" id="sensorState">NOT CONNECTED</span></div>
+      <p class="muted-copy">Connect a supported microcontroller over USB Serial. The device should stream one JSON object per line.</p>
+      <div class="air-metrics">
+        <div class="air-metric"><small>PM2.5</small><strong id="pm25">—</strong><span>µg/m³</span><em id="pm25Status">Awaiting sensor</em></div>
+        <div class="air-metric"><small>PM10</small><strong id="pm10">—</strong><span>µg/m³</span><em id="pm10Status">Awaiting sensor</em></div>
+        <div class="air-metric"><small>CO₂</small><strong id="co2">—</strong><span>ppm</span><em id="co2Status">Awaiting sensor</em></div>
+        <div class="air-metric"><small>AMBIENT TEMP</small><strong id="ambientTemp">—</strong><span>°C</span><em id="ambientStatus">Awaiting sensor</em></div>
+      </div>
+      <div class="sensor-actions"><button class="btn primary" id="connectSensor">Connect sensor (USB)</button><button class="btn secondary" id="disconnectSensor" disabled>Disconnect</button><button class="btn secondary" id="demoSensor">Load demo readings</button><button class="btn secondary" id="streamDemo">Stream demo (live)</button></div>
+      <div class="sensor-note">Live readings are only as reliable as the connected, calibrated sensor. Demo readings are clearly marked and must not be treated as real measurements.</div>
+    </div>
+    <div class="sensor-card card">
+      <div class="sensor-title"><div><span class="eyebrow">02 / THERMAL INTELLIGENCE</span><h3>Heat anomaly monitor</h3></div><span class="connection-pill" id="thermalState">NO THERMAL INPUT</span></div>
+      <div class="thermal-display"><div class="thermal-glyph">◉</div><div><small>MAX THERMAL READING</small><strong id="thermalTemp">— °C</strong><span id="thermalHint">Connect a radiometric thermal sensor</span></div></div>
+      <div class="thermal-grid"><div><small>Hotspot count</small><b id="hotspotCount">—</b></div><div><small>Thermal status</small><b id="thermalAlert">Awaiting data</b></div></div>
+      <p class="muted-copy">Thermal values must come from a radiometric thermal camera or sensor (for example, a calibrated MLX90640/AMG8833 system). An ordinary webcam cannot measure temperature.</p>
+    </div>
+  </div>
+  <div class="sensor-card card chart-card"><div class="sensor-title"><div><span class="eyebrow">03 / TREND INTELLIGENCE</span><h3>Pollution trend timeline</h3></div><div style="display:flex;gap:8px;align-items:center"><span class="connection-pill" id="dataMode">WAITING FOR DATA</span><button class="text-button" id="exportData">Export CSV ↓</button></div></div><canvas id="trendChart" width="1000" height="220" aria-label="Pollution trend chart"></canvas><div class="chart-legend"><span><i class="legend-pm"></i> PM2.5</span><span><i class="legend-pm10"></i> PM10</span><span>Last 30 samples · local browser memory</span></div></div>
+  <div class="command-grid lower-grid">
+    <div class="sensor-card card"><div class="sensor-title"><div><span class="eyebrow">04 / ALERT ENGINE</span><h3>Environmental alerts</h3></div><button class="text-button" id="enableAlerts">Enable notifications</button></div><div id="alertFeed" class="alert-feed"><div class="empty-alert">No alerts yet. Connect sensors or start the camera monitor.</div></div></div>
+    <div class="sensor-card card"><div class="sensor-title"><div><span class="eyebrow">05 / GREEN CHOICES</span><h3>Recommendation engine</h3></div><span class="connection-pill safe-pill">ACTIONABLE GUIDANCE</span></div><div id="recommendations" class="recommendations"><div class="recommendation"><b>🪔 Low-smoke celebration</b><p>Prefer traditional diyas or energy-efficient LED lighting for decorative illumination.</p></div><div class="recommendation"><b>🌿 Verify green products</b><p>If fireworks are permitted locally, buy only authorised, correctly labelled green crackers from licensed sellers. Check current local rules and certification; “green” does not mean pollution-free.</p></div><div class="recommendation"><b>♻️ Festival waste plan</b><p>Arrange separate collection for paper, packaging, food waste and spent materials. Never burn waste.</p></div></div></div>
+  </div>
+  <div class="disclaimer"><b>Measurement and safety:</b> PM2.5/PM10 require a particulate sensor; CO₂ requires a CO₂ sensor; temperature/hotspots require a suitable thermal sensor. Instant readings and indicative bands are not official 24-hour AQI results; use validated averaging and CPCB methods for official comparisons. Webcam analysis can flag visual patterns only. This prototype is an awareness aid, not a certified AQI station, fire alarm, legal-compliance tool or emergency service. Follow CPCB/local authority guidance and contact emergency services for immediate danger.</div>
+</section>
+
+</main>
+<footer><div class="brand"><span class="brand-mark">HU</span><span>HARIT <b>UTSAV AI</b><small>MVA ROBOTICS INNOVATION ORG</small></span></div><span>Student-led startup initiative · Jharkhand Rai University, Ranchi</span><span>© 2026 · v4.0 Launch Edition <a href="#legal" id="legalBtn">Privacy · Terms · Safety · Credits</a></span></footer>
+<script src="vendor/three.min.js"></script>
+<script src="app.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/onnxruntime-web@1.17.1/dist/ort.min.js"></script>
+<script src="vendor/chart.umd.js"></script>
+<script src="scenes.js"></script>
+<script src="vision-pipeline.js"></script>
+<script src="i18n.js"></script>
+<script src="future.js"></script>
+<script src="fireworks-house.js"></script>
+<script src="launch.js"></script>
+<script src="diwali.js"></script>
+<button class="mic-btn" id="micBtn" aria-label="Voice command">🎙</button>
+</body></html>
