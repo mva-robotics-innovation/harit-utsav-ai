@@ -67,7 +67,7 @@ if(window.HU_mount&&T)HU_mount('twinScene',()=>{
  return root;});
 
 // ---------- 5. Command palette + voice ----------
-const go=id=>document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
+const go=id=>window.HU_navigate?window.HU_navigate(id):document.getElementById(id)?.scrollIntoView({behavior:'smooth'});
 const cmds=[['Go to 3D Lab',()=>go('lab3d'),'3d'],['Go to Vision monitor',()=>go('monitor'),'vision'],['Go to Command Centre',()=>go('intelligence'),'command'],['Go to Impact Lab',()=>go('impact'),'impact'],['Go to Research',()=>go('research'),'research'],['Go to Future Lab',()=>go('future'),'future'],
  ['Start camera',()=>$('startCamera').click(),'start camera'],['Stop camera',()=>$('stopCamera').click(),'stop camera'],['Load demo readings',()=>$('demoSensor').click(),'demo'],['Launch fireworks show',()=>{go('future');show();},'fireworks'],['Toggle language हिं / EN',()=>$('langBtn')?.click(),'language'],['Export analytics CSV for Power BI',()=>$('exportBI').click(),'export']];
 const pal=document.createElement('div');pal.className='palette';pal.hidden=true;pal.innerHTML='<div class="pal-box" role="dialog" aria-label="Command palette"><input id="palIn" placeholder="Type a command…  (Esc to close)" aria-label="Command"><ul id="palList"></ul></div>';document.body.append(pal);

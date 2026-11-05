@@ -1,0 +1,51 @@
+/* HARIT UTSAV AI - responsive layout safeguards */
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+html, body {
+  max-width: 100%;
+  overflow-x: clip;
+}
+
+img, video, canvas, svg, iframe {
+  max-width: 100%;
+}
+
+img, video {
+  height: auto;
+}
+
+main {
+  width: 100%;
+  min-width: 0;
+}
+
+main > section,
+main > .intro-grid,
+main > .principles,
+main > .cta-section {
+  min-width: 0;
+}
+
+main section > *,
+main .intro-grid > *,
+main .principles > *,
+main .cta-section > * {
+  min-width: 0;
+}
+
+pre, code {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 768px) {
+  .section,
+  .hero,
+  .intro-grid,
+  .principles,
+  .cta-section {
+    max-width: 100%;
+  }
+}

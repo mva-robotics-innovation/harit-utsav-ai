@@ -8,7 +8,9 @@
 <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="styles.css">
 <link rel="stylesheet" href="upgrade.css">
+<link rel="stylesheet" href="layout-fix.css">
 <link rel="stylesheet" href="launch.css">
+<link rel="stylesheet" href="page-router.css">
 <meta name="description" content="HARIT UTSAV AI: sustainable festival intelligence — vision monitor, air-quality sensors, thermal alerts and green-festival research.">
 </head>
 <body>
@@ -17,7 +19,8 @@
 
 <header class="topbar">
   <a class="brand" href="#home"><span class="brand-mark">HU</span><span>HARIT <b>UTSAV AI</b><small>FESTIVAL SUSTAINABILITY INTELLIGENCE</small></span></a>
-  <button class="menu-toggle" id="menuToggle" aria-label="Open navigation">☰</button>
+  <button class="menu-toggle" id="menuToggle" aria-label="Open navigation" aria-expanded="false">☰</button>
+  <button class="hu-back" id="huBack" type="button" hidden aria-label="Go back to previous section">← Back</button>
   <nav id="nav">
     <a href="#home" class="active">Home</a><a href="#diwali">Diwali</a><a href="#showcase">Gallery</a><a href="#lab3d">3D Lab</a><a href="#house">Fireworks</a><a href="#future">Future Lab</a><a href="#monitor">Vision AI</a><a href="#intelligence">Command Centre</a><a href="#impact">Impact Lab</a><a href="#research">Research</a><a href="#flyer">Team</a>
   </nav>
@@ -233,5 +236,6 @@
 <script src="fireworks-house.js"></script>
 <script src="launch.js"></script>
 <script src="diwali.js"></script>
+<script src="page-router.js"></script>
 <button class="mic-btn" id="micBtn" aria-label="Voice command">🎙</button>
 </body></html>
