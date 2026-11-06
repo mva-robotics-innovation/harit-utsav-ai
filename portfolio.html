@@ -7,29 +7,28 @@
   *{margin:0;padding:0;box-sizing:border-box}
   body{background:#050505;color:#fff;font-family:Inter,system-ui,sans-serif;overflow:hidden;height:100vh}
   #canvas{position:fixed;inset:0;width:100%;height:100%}
-  .ui{position:fixed;inset:0;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:20px;z-index:2}
+  .ui{position:fixed;inset:0;pointer-events:none;display:flex;flex-direction:column;justify-content:space-between;padding:18px;z-index:2}
   .top{display:flex;justify-content:space-between;font-size:11px;letter-spacing:2px;opacity:.6}
-  .top a{pointer-events:auto;color:#fff;text-decoration:none;opacity:.9}
-  .left{position:absolute;left:20px;top:50%;transform:translateY(-50%);font-size:11px;line-height:1.7;opacity:.55}
-  .right{position:absolute;right:20px;top:50%;transform:translateY(-50%);font-size:11px;text-align:right;line-height:1.7;opacity:.55}
-  .bottom{position:absolute;bottom:24px;left:50%;transform:translateX(-50%);text-align:center;width:92%;max-width:560px}
-  .bottom h1{font-size:42px;line-height:.95;letter-spacing:-1px;font-weight:800}
-  .bottom h1 span{color:#fff;opacity:.35}
-  .bottom p{font-size:12px;opacity:.55;margin-top:8px;letter-spacing:.5px}
-  .btn{pointer-events:auto;margin:6px 3px;display:inline-block;padding:11px 18px;border-radius:999px;background:#fff;color:#000;font-weight:700;text-decoration:none;font-size:13px;border:none;cursor:pointer}
+  .top a{pointer-events:auto;color:#fff;text-decoration:none}
+  .left{position:absolute;left:18px;top:50%;transform:translateY(-50%);font-size:11px;line-height:1.7;opacity:.5}
+  .right{position:absolute;right:18px;top:50%;transform:translateY(-50%);font-size:11px;text-align:right;line-height:1.7;opacity:.5}
+  .bottom{position:absolute;bottom:22px;left:50%;transform:translateX(-50%);text-align:center;width:92%;max-width:560px}
+  .bottom h1{font-size:40px;line-height:.95;letter-spacing:-1px;font-weight:800}
+  .bottom h1 span{opacity:.35}
+  .bottom p{font-size:12px;opacity:.55;margin-top:8px}
+  .btn{pointer-events:auto;margin:5px 3px;display:inline-block;padding:11px 18px;border-radius:999px;background:#fff;color:#000;font-weight:700;font-size:13px;border:none;cursor:pointer;text-decoration:none}
   .btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35)}
-  .btn-pink{background:#fff;color:#000}
   #startBtn{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;padding:16px 26px;border-radius:999px;background:#fff;color:#000;font-weight:800;border:none;cursor:pointer;font-size:15px;box-shadow:0 0 60px rgba(255,255,255,.35)}
-  #scanLine{position:fixed;left:0;right:0;height:1px;background:rgba(255,255,255,.9);box-shadow:0 0 20px #fff;z-index:3;display:none}
-  video{position:fixed;bottom:8px;right:8px;width:90px;opacity:.25;border-radius:12px;z-index:1}
+  #status{position:fixed;top:60px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(0,0,0,.7);border:1px solid #fff;padding:7px 14px;border-radius:999px;font-size:12px;display:none}
+  video{position:fixed;bottom:8px;right:8px;width:92px;opacity:.35;border-radius:12px;z-index:1}
   #segCanvas{display:none}
 </style>
 </head>
 <body>
 <canvas id="canvas"></canvas>
 <video id="video" autoplay muted playsinline></video>
-<canvas id="segCanvas" width="360" height="270"></canvas>
-<div id="scanLine"></div>
+<canvas id="segCanvas" width="240" height="180"></canvas>
+<div id="status">Scanning… keep face in centre, good light</div>
 
 <div class="ui">
   <div class="top"><span>AK.</span><span>PORTFOLIO — 2026</span><a href="presentation.html">← HOME</a></div>
@@ -38,11 +37,7 @@
   <div class="bottom">
     <h1>ASHISH <span>KUMAR</span></h1>
     <p>Tradition Meets Technology • HARIT UTSAV AI • Multi Modal Gen AI • MVA Robotics</p>
-    <div style="margin-top:8px">
-      <button class="btn btn-pink" onclick="speakAboutMe()">🔊 Hear About Me</button>
-      <button class="btn btn-ghost" onclick="stopVoice()">Stop</button>
-      <a class="btn btn-ghost" href="presentation.html">View My Work ↗</a>
-    </div>
+    <div><button class="btn" onclick="speakAboutMe()">🔊 Hear About Me</button><button class="btn btn-ghost" onclick="stopVoice()">Stop</button><a class="btn btn-ghost" href="presentation.html">View My Work ↗</a></div>
   </div>
 </div>
 
@@ -59,35 +54,40 @@ renderer.setPixelRatio(Math.min(devicePixelRatio,2));
 renderer.setSize(innerWidth,innerHeight);
 const scene=new THREE.Scene();
 const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,0.1,100);
-camera.position.z=3.1;
+camera.position.z=3.0;
 
-// AVI STYLE: MANY small white particles, dense
-const COUNT=6500;
+const COUNT=7000;
 const geo=new THREE.BufferGeometry();
 const pos=new Float32Array(COUNT*3);
 const targetPos=new Float32Array(COUNT*3);
+const homeUV=new Float32Array(COUNT*2); // FIXED home for each particle - THIS IS THE FIX
 const colors=new Float32Array(COUNT*3);
 geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
 geo.setAttribute('color',new THREE.BufferAttribute(colors,3));
-// Small size = sharp statue look like in Reel
-const mat=new THREE.PointsMaterial({size:0.016,vertexColors:true,transparent:true,opacity:0.95,sizeAttenuation:true,depthWrite:false});
+const mat=new THREE.PointsMaterial({size:0.018,vertexColors:true,transparent:true,opacity:0.95,sizeAttenuation:true,depthWrite:false});
 const points=new THREE.Points(geo,mat);
 scene.add(points);
 
+// FIXED GRID: particles spread evenly over frame, not random each frame
 for(let i=0;i<COUNT;i++){
-  // Start scattered like in Reel 0.0s
-  pos[i*3]=(Math.random()-0.5)*5; pos[i*3+1]=(Math.random()-0.5)*5; pos[i*3+2]=(Math.random()-0.5)*2;
+  // 60% in centre face area, 40% full frame for shoulders
+  let u,v;
+  if(i<COUNT*0.6){ u=0.25+Math.random()*0.5; v=0.08+Math.random()*0.45; } // face zone
+  else { u=Math.random(); v=0.05+Math.random()*0.85; } // body zone
+  homeUV[i*2]=u; homeUV[i*2+1]=v;
+  pos[i*3]=(Math.random()-0.5)*5; pos[i*3+1]=(Math.random()-0.5)*5; pos[i*3+2]=(Math.random()-0.5)*1;
   targetPos[i*3]=pos[i*3]; targetPos[i*3+1]=pos[i*3+1]; targetPos[i*3+2]=pos[i*3+2];
   colors[i*3]=1; colors[i*3+1]=1; colors[i*3+2]=1;
 }
-let hasBody=false, mouseX=0, mouseY=0;
-addEventListener('mousemove',e=>{ mouseX=(e.clientX/innerWidth-0.5)*0.6; mouseY=(e.clientY/innerHeight-0.5)*0.3; });
+let hasBody=false, mouseX=0, mouseY=0, bbox={minX:0.3,maxX:0.7,minY:0.1,maxY:0.9};
+addEventListener('mousemove',e=>{ mouseX=(e.clientX/innerWidth-0.5)*0.5; mouseY=(e.clientY/innerHeight-0.5)*0.25; });
+addEventListener('touchmove',e=>{ const t=e.touches[0]; mouseX=(t.clientX/innerWidth-0.5)*0.5; mouseY=(t.clientY/innerHeight-0.5)*0.25; },{passive:true});
 
 const segCanvas=document.getElementById('segCanvas');
 const segCtx=segCanvas.getContext('2d',{willReadFrequently:true});
+let facePts=null;
 const faceMesh=new FaceMesh({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}`});
 faceMesh.setOptions({maxNumFaces:1,refineLandmarks:true,minDetectionConfidence:0.5,minTrackingConfidence:0.5});
-let facePts=null;
 faceMesh.onResults(r=>{ if(r.multiFaceLandmarks?.length) facePts=r.multiFaceLandmarks[0]; });
 
 const selfieSeg=new SelfieSegmentation({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${f}`});
@@ -97,32 +97,44 @@ selfieSeg.onResults(res=>{
   hasBody=true;
   segCtx.drawImage(res.segmentationMask,0,0,segCanvas.width,segCanvas.height);
   let img; try{ img=segCtx.getImageData(0,0,segCanvas.width,segCanvas.height).data; }catch(e){return;}
-  let body=[];
-  // Sample densely - step 1 = sharp, not sparse
-  for(let y=0;y<segCanvas.height;y+=1){
-    for(let x=0;x<segCanvas.width;x+=1){
-      if(img[(y*segCanvas.width+x)*4+3]>120) body.push([x/segCanvas.width,y/segCanvas.height]);
+  // Find body bounding box for auto-centre
+  let minX=999,maxX=-1,minY=999,maxY=-1,cnt=0;
+  for(let y=0;y<segCanvas.height;y+=2){ for(let x=0;x<segCanvas.width;x+=2){ if(img[(y*segCanvas.width+x)*4+3]>100){ const ux=x/segCanvas.width, uy=y/segCanvas.height; if(ux<minX)minX=ux; if(ux>maxX)maxX=ux; if(uy<minY)minY=uy; if(uy>maxY)maxY=uy; cnt++; } } }
+  if(cnt>200){ bbox.minX=minX; bbox.maxX=maxX; bbox.minY=minY; bbox.maxY=maxY; }
+  const cx=(bbox.minX+bbox.maxX)/2, cy=(bbox.minY+bbox.maxY)/2;
+  const bw=Math.max(bbox.maxX-bbox.minX,0.2), bh=Math.max(bbox.maxY-bbox.minY,0.2);
+  const scaleX=2.1/bw, scaleY=2.9/bh, scale=Math.min(scaleX,scaleY);
+
+  for(let i=0;i<COUNT;i++){
+    const u=homeUV[i*2], v=homeUV[i*2+1];
+    // Check if this fixed home is inside body mask
+    const mx=Math.floor(u*segCanvas.width), my=Math.floor(v*segCanvas.height);
+    const a=img[(my*segCanvas.width+mx)*4+3];
+    // MIRROR FIX: front camera is mirrored - flip X
+    const uFlip=1-u;
+    if(a>90){
+      // Inside body -> show at centred, scaled position
+      targetPos[i*3]=(uFlip-cx)*scale;
+      targetPos[i*3+1]=(cy-v)*scale+0.05;
+      targetPos[i*3+2]=(Math.random()-0.5)*0.08;
+      const shade=0.8+((a/255)*0.2);
+      colors[i*3]=shade; colors[i*3+1]=shade; colors[i*3+2]=shade;
+    } else {
+      // Outside body -> push to edge, make invisible by moving far behind and dark
+      targetPos[i*3]=(uFlip-cx)*scale*1.4;
+      targetPos[i*3+1]=(cy-v)*scale;
+      targetPos[i*3+2]=-2.5;
+      colors[i*3]=0; colors[i*3+1]=0; colors[i*3+2]=0;
     }
   }
-  if(body.length<100) return;
-  for(let i=0;i<COUNT;i++){
-    const p=body[Math.floor(Math.random()*body.length)];
-    // Avi framing: head + shoulders centred, tall. Face area gets more density via face landmarks
-    targetPos[i*3]=(p[0]-0.5)*2.35;
-    targetPos[i*3+1]=(0.5-p[1])*3.2+0.1;
-    targetPos[i*3+2]=(Math.random()-0.5)*0.12;
-    // White with slight grey variation for depth - like Reel
-    const v=0.75+Math.random()*0.25;
-    colors[i*3]=v; colors[i*3+1]=v; colors[i*3+2]=v;
-  }
-  // Face detail boost: overwrite 35% particles with exact face mesh for glasses / eyes sharpness
+  // Face detail: face landmarks override for sharp eyes/glasses
   if(facePts){
-    for(let i=0;i<COUNT*0.35;i++){
-      const fp=facePts[Math.floor(Math.random()*facePts.length)];
-      // Map face mesh to same space as body - face is upper part
-      targetPos[i*3]=(fp.x-0.5)*2.35;
-      targetPos[i*3+1]=(0.5-fp.y)*3.2+0.1;
-      targetPos[i*3+2]=fp.z*-0.4;
+    for(let i=0;i<COUNT*0.45;i++){
+      const fp=facePts[i % facePts.length];
+      // FaceMesh is already mirrored in MediaPipe, flip to match
+      targetPos[i*3]=( (1-fp.x)-cx)*scale;
+      targetPos[i*3+1]=(cy-fp.y)*scale+0.05;
+      targetPos[i*3+2]=fp.z*-0.3;
       colors[i*3]=1; colors[i*3+1]=1; colors[i*3+2]=1;
     }
   }
@@ -131,9 +143,8 @@ selfieSeg.onResults(res=>{
 
 document.getElementById('startBtn').onclick=async()=>{
   document.getElementById('startBtn').style.display='none';
-  // Scan line animation like Reel intro
-  const line=document.getElementById('scanLine'); line.style.display='block';
-  let y=0; const iv=setInterval(()=>{ y+=4; line.style.top=y+'px'; if(y>innerHeight){ clearInterval(iv); line.style.display='none'; } },16);
+  document.getElementById('status').style.display='block';
+  setTimeout(()=>document.getElementById('status').style.display='none',5000);
   const video=document.getElementById('video');
   const cam=new Camera(video,{onFrame:async()=>{ await selfieSeg.send({image:video}); await faceMesh.send({image:video}); },width:640,height:480});
   cam.start();
@@ -143,32 +154,21 @@ document.getElementById('startBtn').onclick=async()=>{
 function animate(){
   requestAnimationFrame(animate);
   for(let i=0;i<COUNT;i++){
-    // Slow smooth converge - cinematic like Reel, not jumpy
-    const speed = hasBody ? 0.12 : 0.02;
-    pos[i*3]+=(targetPos[i*3]-pos[i*3])*speed;
-    pos[i*3+1]+=(targetPos[i*3+1]-pos[i*3+1])*speed;
-    pos[i*3+2]+=(targetPos[i*3+2]-pos[i*3+2])*speed;
-    // Tiny breathing float
-    pos[i*3+1]+=Math.sin(Date.now()*0.0008+i)*0.0004;
+    const s=hasBody?0.16:0.02;
+    pos[i*3]+=(targetPos[i*3]-pos[i*3])*s;
+    pos[i*3+1]+=(targetPos[i*3+1]-pos[i*3+1])*s;
+    pos[i*3+2]+=(targetPos[i*3+2]-pos[i*3+2])*s;
   }
-  points.rotation.y += (mouseX - points.rotation.y)*0.04;
-  points.rotation.x += (mouseY - points.rotation.x)*0.04;
+  points.rotation.y+=(mouseX-points.rotation.y)*0.05;
+  points.rotation.x+=(mouseY-points.rotation.x)*0.05;
   geo.attributes.position.needsUpdate=true;
   renderer.render(scene,camera);
 }
 animate();
 addEventListener('resize',()=>{renderer.setSize(innerWidth,innerHeight);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix()});
 
-// VOICE - Female
 const aboutText="Hello! I am Ashish Kumar. I am an M C A student at Jharkhand Rai University, Ranchi. I build Artificial Intelligence that connects tradition with technology. My project Harit Utsav A I makes Indian festivals sustainable, safe, and eco friendly. I also built Multi Modal Gen A I, which was appreciated at Gwalior Hackathon. Our festivals taught us to respect nature, and my technology helps us protect it. Thank you for visiting my portfolio.";
-function speakAboutMe(){
-  speechSynthesis.cancel();
-  const u=new SpeechSynthesisUtterance(aboutText);
-  u.rate=0.95; u.pitch=1.15; u.volume=1; u.lang='en-IN';
-  const voices=speechSynthesis.getVoices();
-  let v=voices.find(v=>/female|Zira|Samantha|Google US English|Neerja|Ananya/i.test(v.name))||voices.find(v=>v.lang.startsWith('en-IN'))||voices.find(v=>v.lang.startsWith('en-'));
-  if(v) u.voice=v; speechSynthesis.speak(u);
-}
+function speakAboutMe(){ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(aboutText); u.rate=0.95; u.pitch=1.15; u.volume=1; u.lang='en-IN'; const vs=speechSynthesis.getVoices(); let v=vs.find(v=>/female|Zira|Samantha|Google US English|Neerja|Ananya/i.test(v.name))||vs.find(v=>v.lang.startsWith('en-IN'))||vs.find(v=>v.lang.startsWith('en-')); if(v) u.voice=v; speechSynthesis.speak(u); }
 function stopVoice(){ speechSynthesis.cancel(); }
 </script>
 </body>
