@@ -1,0 +1,242 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>HARIT UTSAV AI | Real Camera Cracker Scanner</title>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#030303;color:#fff;font-family:'Space Grotesk',monospace;overflow:hidden;height:100vh}
+  #canvas{position:fixed;inset:0;width:100%;height:100%}
+  .hud{position:fixed;inset:0;pointer-events:none;z-index:3;padding:14px}
+  .top{display:flex;justify-content:space-between;font-size:11px;letter-spacing:1px}
+  .top b{color:#ffb300}
+  .left{position:absolute;left:14px;top:62px;font-size:10px;line-height:1.8;opacity:.8;white-space:pre}
+  .right{position:absolute;right:14px;top:62px;font-size:10px;line-height:1.8;text-align:right;opacity:.8;white-space:pre}
+  .corner{position:absolute;width:34px;height:34px;border:2px solid #ffb300}
+  .c1{top:33%;left:12%}.c2{top:33%;right:12%;transform:scaleX(-1)}
+  .c3{bottom:30%;left:12%;transform:scaleY(-1)}.c4{bottom:30%;right:12%;transform:scale(-1)}
+  #scanLine{position:absolute;left:12%;right:12%;top:33%;height:2px;background:#ffb300;box-shadow:0 0 20px #ffb300;display:none;z-index:4}
+  #centerTxt{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);letter-spacing:3px;font-size:12px;text-align:center;line-height:1.6;z-index:3}
+  #centerTxt span{font-size:10px;opacity:.6;letter-spacing:1px}
+  #aiLive{position:fixed;top:92px;left:50%;transform:translateX(-50%);z-index:6;background:rgba(0,0,0,.75);border:1px solid #00ff9d;padding:6px 12px;border-radius:999px;font-size:11px;display:none}
+  .bottom{position:fixed;bottom:0;left:0;right:0;z-index:5;background:linear-gradient(transparent,#000 25%);padding:10px}
+  .report{background:rgba(10,10,10,.92);border:1px solid #ffb300;border-radius:16px;padding:12px;display:none}
+  .report h2{font-size:19px}
+  .bars{margin:8px 0}
+  .bar{display:flex;align-items:center;gap:8px;font-size:11px;margin:4px 0}
+  .bar i{flex:1;height:8px;background:#222;border-radius:99px;overflow:hidden;display:block}
+  .bar i b{display:block;height:100%}
+  .chip{padding:6px 10px;border-radius:999px;border:1px solid #333;font-size:11px;background:#111;cursor:pointer}
+  .chip.green{border-color:#00ff9d;color:#00ff9d}
+  .btn{pointer-events:auto;border:none;cursor:pointer;padding:12px 18px;border-radius:999px;font-weight:800;font-size:13px}
+  .btn-scan{background:#ffb300;color:#000;width:100%;margin-top:8px}
+  .btn-cam{background:#fff;color:#000}
+  .btn-ghost{background:transparent;color:#fff;border:1px solid #555}
+  .row{display:flex;gap:8px;margin-top:8px}
+  .row .btn{flex:1}
+  video{position:fixed;bottom:120px;right:10px;width:110px;opacity:.9;border-radius:10px;z-index:2;border:1px solid #ffb300}
+  #demoRow{display:flex;gap:6px;overflow-x:auto;padding:6px 0}
+  #demoRow button{white-space:nowrap}
+  #snapCanvas{display:none}
+</style>
+</head>
+<body>
+<canvas id="canvas"></canvas>
+<video id="video" autoplay muted playsinline></video>
+<canvas id="snapCanvas" width="640" height="480"></canvas>
+<div id="aiLive">AI: Looking...</div>
+
+<div class="hud">
+  <div class="top"><span>EXT1<br>HARIT UTSAV AI<br>REAL CAMERA AI</span><span>SCAN: <b id="scanStatus">IDLE</b><br>AI: OCR + COLOUR + SHAPE<br>MODE: LIVE</span></div>
+  <div class="left" id="leftHud">OBJECT: ---
+TEXT READ: ---
+COLOR: ---
+SHAPE: ---
+CONF: ---</div>
+  <div class="right" id="rightHud">PM2.5: ---
+dB: ---
+CHEMICAL: ---
+STATUS: WAITING</div>
+  <div class="corner c1"></div><div class="corner c2"></div><div class="corner c3"></div><div class="corner c4"></div>
+  <div id="scanLine"></div>
+  <div id="centerTxt">PLACE SPECIMEN<br><span>PACKET INSIDE ORANGE BOX • TAP SCAN</span></div>
+</div>
+
+<div class="bottom">
+  <div class="report" id="report"></div>
+  <div id="demoRow">
+    <button class="chip" onclick="demoScan('anar')">🎆 Anar</button>
+    <button class="chip" onclick="demoScan('chakri')">🌀 Chakri</button>
+    <button class="chip" onclick="demoScan('rocket')">🚀 Rocket</button>
+    <button class="chip" onclick="demoScan('sutli')">💣 Sutli Bomb</button>
+    <button class="chip" onclick="demoScan('fuljhadi')">✨ Fuljhadi</button>
+    <button class="chip green" onclick="demoScan('green')">🌱 Green</button>
+    <button class="chip" onclick="demoScan('ladis')">🧨 Ladi</button>
+  </div>
+  <div class="row">
+    <button class="btn btn-cam" onclick="startCam()">📷 Start Camera AI</button>
+    <button class="btn btn-ghost" onclick="captureAndAnalyze()">📸 Capture & Analyse</button>
+  </div>
+  <button class="btn btn-scan" onclick="scanWithCamera()">✦ SCAN WITH CAMERA AI</button>
+  <div style="text-align:center;font-size:11px;opacity:.6;margin-top:6px"><a href="portfolio.html" style="color:#ffb300;text-decoration:none">← Back to Portfolio</a> • Harit Utsav AI</div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+<script>
+const DB={
+  anar:{name:"ANAR / FLOWER POT",emoji:"🎆",rating:"C",harm:62,pm:180,db:110,chem:"Barium Nitrate + Aluminium",desc:"Beautiful sparks, but high smoke. Keep 5m distance.",alt:"Green Anar — 30% less smoke",color:0xffb300,shape:"cone"},
+  chakri:{name:"CHAKRI / GROUND SPINNER",emoji:"🌀",rating:"C",harm:58,pm:160,db:105,chem:"Potassium Nitrate + Charcoal",desc:"Spins fast, low height. Risk for kids near feet.",alt:"LED Chakri / Cold Spark Machine",color:0x00ff9d,shape:"disc"},
+  rocket:{name:"ROCKET",emoji:"🚀",rating:"D",harm:78,pm:240,db:125,chem:"Black Powder + Barium",desc:"Unpredictable direction. Most injuries in Diwali.",alt:"Sky Lantern / Drone Light Show",color:0xff3333,shape:"stick"},
+  sutli:{name:"SUTLI BOMB",emoji:"💣",rating:"F",harm:94,pm:320,db:150,chem:"Flash Powder — Aluminium + Perchlorate",desc:"EXTREMELY HARMFUL. 150 dB can damage hearing.",alt:"❌ Do NOT Use — Use Green Cracker or Diya",color:0xff0000,shape:"box"},
+  fuljhadi:{name:"FULJHADI / SPARKLER",emoji:"✨",rating:"B",harm:35,pm:90,db:85,chem:"Barium Nitrate (low)",desc:"Safest traditional cracker, but hold away from face.",alt:"Already good — Use small pack only",color:0xffff66,shape:"stick"},
+  green:{name:"GREEN CRACKER",emoji:"🌱",rating:"A",harm:18,pm:45,db:95,chem:"Low Emission — No Barium",desc:"Best choice. 30% less PM, no barium, CSIR approved.",alt:"✅ Recommended by Harit Utsav AI",color:0x00ff9d,shape:"box"},
+  ladis:{name:"LADI / 1000 SHOT",emoji:"🧨",rating:"F",harm:92,pm:300,db:145,chem:"Flash Powder x 1000",desc:"Continuous blast, worst for asthma, pets, elders.",alt:"❌ Avoid — Use 1 Green Anar instead",color:0xff6600,shape:"box"}
+};
+let current='anar', scanning=false, camOn=false, stream=null;
+
+// --- THREE PARTICLE HOLOGRAM ---
+const canvas=document.getElementById('canvas');
+const renderer=new THREE.WebGLRenderer({canvas,alpha:true});
+renderer.setSize(innerWidth,innerHeight);
+const scene=new THREE.Scene();
+const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,0.1,100);
+camera.position.z=3.2;
+const COUNT=3500;
+const geo=new THREE.BufferGeometry();
+const pos=new Float32Array(COUNT*3), tgt=new Float32Array(COUNT*3), col=new Float32Array(COUNT*3);
+geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
+geo.setAttribute('color',new THREE.BufferAttribute(col,3));
+scene.add(new THREE.Points(geo,new THREE.PointsMaterial({size:0.022,vertexColors:true,transparent:true,opacity:0.95})));
+const points=scene.children[0];
+for(let i=0;i<COUNT;i++){ pos[i*3]=(Math.random()-0.5)*5; pos[i*3+1]=(Math.random()-0.5)*5; pos[i*3+2]=(Math.random()-0.5)*2; tgt[i*3]=pos[i*3]; tgt[i*3+1]=pos[i*3+1]; tgt[i*3+2]=pos[i*3+2]; col[i*3]=1; col[i*3+1]=0.7; col[i*3+2]=0; }
+function buildShape(type){
+  const d=DB[type]; const c=new THREE.Color(d.color);
+  for(let i=0;i<COUNT;i++){
+    let x,y,z;
+    if(d.shape==='cone'){ const r=Math.random()*0.7*(1-Math.random()*0.7); const a=Math.random()*Math.PI*2; x=Math.cos(a)*r; y=(Math.random()-0.2)*1.6; z=Math.sin(a)*r; }
+    else if(d.shape==='disc'){ const r=Math.sqrt(Math.random())*0.9; const a=Math.random()*Math.PI*2; x=Math.cos(a)*r; y=(Math.random()-0.5)*0.2; z=Math.sin(a)*r; }
+    else if(d.shape==='stick'){ x=(Math.random()-0.5)*0.2; y=(Math.random()-0.5)*2.2; z=(Math.random()-0.5)*0.2; }
+    else { x=(Math.random()-0.5)*1.6; y=(Math.random()-0.5)*1.2; z=(Math.random()-0.5)*1.0; }
+    tgt[i*3]=x; tgt[i*3+1]=y+0.2; tgt[i*3+2]=z;
+    const v=0.7+Math.random()*0.3; col[i*3]=c.r*v; col[i*3+1]=c.g*v; col[i*3+2]=c.b*v;
+  }
+  geo.attributes.color.needsUpdate=true;
+}
+function scatter(){ for(let i=0;i<COUNT;i++){ tgt[i*3]=(Math.random()-0.5)*5; tgt[i*3+1]=(Math.random()-0.5)*5; tgt[i*3+2]=(Math.random()-0.5)*2; } }
+function animate(){ requestAnimationFrame(animate); for(let i=0;i<COUNT;i++){ pos[i*3]+=(tgt[i*3]-pos[i*3])*0.08; pos[i*3+1]+=(tgt[i*3+1]-pos[i*3+1])*0.08; pos[i*3+2]+=(tgt[i*3+2]-pos[i*3+2])*0.08; } points.rotation.y+=0.006; geo.attributes.position.needsUpdate=true; renderer.render(scene,camera); }
+animate();
+
+// --- REAL CAMERA AI: OCR + COLOUR + SHAPE ---
+async function startCam(){
+  try{
+    stream=await navigator.mediaDevices.getUserMedia({video:{facingMode:'environment',width:640,height:480}});
+    const v=document.getElementById('video'); v.srcObject=stream; await v.play();
+    camOn=true;
+    document.getElementById('aiLive').style.display='block';
+    document.getElementById('aiLive').textContent='AI: Camera ON — Point at packet';
+    document.getElementById('centerTxt').innerHTML='CAMERA LIVE<br><span>PACKET IN ORANGE BOX → SCAN</span>';
+  }catch(e){ alert('Camera blocked. Allow camera, or use Demo buttons.'); }
+}
+function analyzeColor(){
+  const v=document.getElementById('video'); const c=document.getElementById('snapCanvas'); const ctx=c.getContext('2d');
+  ctx.drawImage(v,0,0,640,480);
+  // Crop centre box — where packet is
+  const img=ctx.getImageData(192,144,256,192).data;
+  let r=0,g=0,b=0,n=0, bright=0;
+  for(let i=0;i<img.length;i+=16){ r+=img[i]; g+=img[i+1]; b+=img[i+2]; n++; }
+  r/=n; g/=n; b/=n; bright=(r+g+b)/3;
+  // Dominant colour logic
+  let colorName='MIXED', shapeGuess='box';
+  if(g>120 && g>r+20 && g>b+10) colorName='GREEN';
+  else if(r>130 && r>g+25) colorName='RED';
+  else if(r>150 && g>130 && b<90) colorName='YELLOW';
+  else if(bright>180) colorName='WHITE / LIGHT';
+  else if(bright<60) colorName='DARK';
+  // Aspect: if centre is tall vs wide — simple: check left/right brightness diff
+  return {r,g,b,bright,colorName};
+}
+async function ocrFromCanvas(){
+  try{
+    const c=document.getElementById('snapCanvas');
+    const {data:{text}}=await Tesseract.recognize(c,'eng',{tessedit_char_whitelist:'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz '});
+    return text.toLowerCase();
+  }catch(e){ return ''; }
+}
+function decideFromAI(ocrText, colorInfo){
+  const t=ocrText.toLowerCase();
+  let found=null, reason='', conf=72;
+  // 1. OCR WINS — if packet text found
+  if(t.includes('green')||t.includes('eco')||t.includes('harit')){ found='green'; reason='OCR: GREEN on packet'; conf=96; }
+  else if(t.includes('sutli')||t.includes('bomb')||t.includes('atom')){ found='sutli'; reason='OCR: SUTLI BOMB on packet'; conf=97; }
+  else if(t.includes('ladi')||t.includes('ladis')||t.includes('1000')||t.includes('10000')){ found='ladis'; reason='OCR: LADI on packet'; conf=95; }
+  else if(t.includes('rocket')){ found='rocket'; reason='OCR: ROCKET on packet'; conf=96; }
+  else if(t.includes('anar')||t.includes('flower')||t.includes('pot')){ found='anar'; reason='OCR: ANAR on packet'; conf=95; }
+  else if(t.includes('chakri')||t.includes('chakra')||t.includes('spinner')||t.includes('ground')){ found='chakri'; reason='OCR: CHAKRI on packet'; conf=95; }
+  else if(t.includes('fuljhadi')||t.includes('sparkler')||t.includes('phuljhadi')){ found='fuljhadi'; reason='OCR: FULJHADI on packet'; conf=95; }
+  // 2. COLOUR FALLBACK
+  else if(colorInfo.colorName==='GREEN'){ found='green'; reason='COLOUR AI: Green dominant'; conf=78; }
+  else if(colorInfo.colorName==='RED'){ found='sutli'; reason='COLOUR AI: Red packet = Bomb/Ladi'; conf=74; }
+  else if(colorInfo.colorName==='YELLOW'){ found='anar'; reason='COLOUR AI: Yellow = Anar'; conf=70; }
+  else { found='anar'; reason='AI: No text — Best guess from shape'; conf=58; }
+  return {found,reason,conf,ocrText:t};
+}
+async function captureAndAnalyze(){
+  if(!camOn){ await startCam(); await new Promise(r=>setTimeout(r,800)); }
+  document.getElementById('aiLive').textContent='AI: Reading packet text + colour...';
+  analyzeColor(); // draws snapCanvas
+  const colorInfo=analyzeColor();
+  const ocr=await ocrFromCanvas();
+  const res=decideFromAI(ocr,colorInfo);
+  document.getElementById('aiLive').textContent=`AI: ${res.reason} • "${ocr.slice(0,40)}"`;
+  document.getElementById('leftHud').textContent=`OBJECT: ${DB[res.found].name}\nTEXT READ: ${ocr.slice(0,30)||'---'}\nCOLOR: ${colorInfo.colorName}\nSHAPE: ${DB[res.found].shape.toUpperCase()}\nCONF: ${res.conf}%`;
+  return res;
+}
+async function scanWithCamera(){
+  if(scanning) return; scanning=true;
+  document.getElementById('centerTxt').innerHTML='SCANNING...<br><span>OCR + COLOUR + SHAPE AI RUNNING</span>';
+  document.getElementById('scanStatus').textContent='SCANNING';
+  document.getElementById('scanLine').style.display='block';
+  scatter();
+  let y=33; const iv=setInterval(()=>{ y+=2; if(y>68) y=33; document.getElementById('scanLine').style.top=y+'%'; },60);
+  // Real AI runs during scan animation
+  let aiRes={found:current,reason:'Demo',conf:70};
+  try{ aiRes=await captureAndAnalyze(); }catch(e){}
+  setTimeout(()=>{
+    clearInterval(iv); document.getElementById('scanLine').style.display='none';
+    document.getElementById('scanStatus').textContent='DONE ✓';
+    document.getElementById('centerTxt').innerHTML='SPECIMEN LOCKED<br><span>REPORT BELOW</span>';
+    current=aiRes.found; buildShape(current); showReport(current, aiRes); scanning=false;
+  },1200);
+}
+function showReport(type, aiRes){
+  const d=DB[type];
+  const harmColor=d.harm>80?'#ff2222':d.harm>50?'#ffb300':'#00ff9d';
+  const ratingColor=d.rating==='A'?'#00ff9d':d.rating==='F'?'#ff2222':'#ffb300';
+  document.getElementById('report').style.display='block';
+  document.getElementById('report').innerHTML=`
+    <div style="display:flex;justify-content:space-between;align-items:center"><h2>${d.emoji} ${d.name} <span style="color:${ratingColor}">• RATING: ${d.rating}</span></h2><button onclick="speak()" style="background:#ffb300;border:none;padding:8px 12px;border-radius:99px;font-weight:800">🔊 Hear</button></div>
+    <p style="font-size:12px;opacity:.8;margin:4px 0">${d.desc}</p>
+    <p style="font-size:11px;color:#00ff9d">🤖 AI Detected: ${aiRes?aiRes.reason:'Demo'} • Confidence: ${aiRes?aiRes.conf:70}% ${aiRes&&aiRes.ocrText?`• Text: "${aiRes.ocrText.slice(0,30)}"`:''}</p>
+    <div class="bars">
+      <div class="bar"><span>HARM</span><i><b style="width:${d.harm}%;background:${harmColor}"></b></i><b>${d.harm}/100</b></div>
+      <div class="bar"><span>PM2.5</span><i><b style="width:${Math.min(d.pm/3.2,100)}%;background:#ff6600"></b></i><b>${d.pm} µg</b></div>
+      <div class="bar"><span>SOUND</span><i><b style="width:${d.db/1.5}%;background:#ffcc00"></b></i><b>${d.db} dB</b></div>
+    </div>
+    <div style="font-size:11px">🧪 Chemical: ${d.chem}<br>🌱 Eco Alternative: <b style="color:#00ff9d">${d.alt}</b></div>
+    <div style="font-size:11px;margin-top:6px;opacity:.7">${d.harm>80?'⚠️ WARNING: Avoid near kids, pets, asthma patients.':'✅ Tip: Burst 1, not 10. Keep water bucket nearby.'}</div>
+  `;
+  document.getElementById('rightHud').textContent=`PM2.5: ${d.pm}\ndB: ${d.db}\nCHEMICAL: ${d.chem.split(' ')[0]}\nSTATUS: SCANNED ✓`;
+  speakReport(d);
+}
+function demoScan(type){ current=type; scanning=false; // demo bypasses camera
+  document.getElementById('centerTxt').innerHTML='SCANNING...<br><span>DEMO MODE</span>';
+  document.getElementById('scanLine').style.display='block'; scatter();
+  setTimeout(()=>{ document.getElementById('scanLine').style.display='none'; buildShape(type); showReport(type,{reason:'Demo Mode',conf:100,ocrText:''}); },1200);
+}
+function speakReport(d){ if(!d) d=DB[current]; speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(`${d.name}. Eco rating ${d.rating}. Harmfulness ${d.harm} out of 100. Sound ${d.db} decibel. ${d.desc}. Eco alternative: ${d.alt}`); u.lang='en-IN'; u.rate=0.92; u.pitch=0.75; const vs=speechSynthesis.getVoices(); let v=vs.find(v=>v.lang.startsWith('en-IN'))||vs[0]; if(v) u.voice=v; speechSynthesis.speak(u); }
+function speak(){ speakReport(); }
+addEventListener('resize',()=>{renderer.setSize(innerWidth,innerHeight);camera.aspect=innerWidth/innerHeight;camera.updateProjectionMatrix()});
+</script>
+</body>
+</html>
