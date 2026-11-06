@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Harit Utsav AI — All Pages Hub</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial,sans-serif}
+  body{background:#02120f;color:#fff;padding:16px;max-width:900px;margin:0 auto}
+  .top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+  .logo{font-weight:900;color:#8affc1;font-size:22px;line-height:1}
+  .logo span{font-size:10px;display:block;color:#aaa;letter-spacing:2px;margin-top:3px}
+  .live{background:#ff2d55;color:#fff;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:800}
+  .live i{display:inline-block;width:8px;height:8px;background:#fff;border-radius:50%;margin-right:5px;animation:blink 1s infinite}
+  @keyframes blink{50%{opacity:.2}}
+  h1{font-size:32px;line-height:1.15;margin:18px 0 8px}
+  h1 span{color:#8affc1} h1 em{color:#ffd97a;font-style:normal}
+  p.sub{color:#c8d6d0;line-height:1.6;font-size:14px}
+  .search{margin:16px 0}
+  .search input{width:100%;padding:14px;border-radius:14px;border:1px solid #2bff9d;background:#0a2e26;color:#fff;font-size:15px;outline:none}
+  .search input::placeholder{color:#888}
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+  @media(max-width:640px){.grid{grid-template-columns:1fr}}
+  .card{background:#0a2e26;border:1px solid #1e4d3d;border-radius:20px;padding:18px;display:flex;flex-direction:column;gap:8px}
+  .card.big{grid-column:span 2;background:linear-gradient(135deg,#0a2e26,#123a2f);border-color:#4dffb0}
+  @media(max-width:640px){.card.big{grid-column:span 1}}
+  .card .icon{font-size:28px}
+  .card h2{font-size:18px;color:#8affc1}
+  .card p{color:#c8d6d0;font-size:13px;line-height:1.5}
+  .card a{display:block;text-align:center;background:#4dffb0;color:#000;font-weight:900;padding:13px;border-radius:12px;text-decoration:none;margin-top:auto;font-size:14px}
+  .card a.white{background:#fff}
+  .card a.outline{background:transparent;color:#fff;border:1px solid #4dffb0}
+  .card a.pink{background:#ff5da2;color:#fff}
+  .judge{background:#fff3cd;color:#222;border-radius:16px;padding:16px;margin:14px 0;line-height:1.7;font-size:14px}
+  .judge b{color:#000}
+  .footer{text-align:center;color:#aaa;font-size:12px;margin:20px 0;line-height:1.6}
+  .hidden{display:none !important}
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="logo">HARIT UTSAV AI <span>ALL PAGES • ONE HUB • NO CHANGE TO INDEX</span></div>
+    <span class="live"><i></i>LIVE</span>
+  </div>
+
+  <h1>Celebrate tradition.<br><span>Protect our</span> <em>tomorrow.</em></h1>
+  <p class="sub">One page, all links. Search and open any page. Your <b style="color:#fff">index.html is untouched</b> — this is a separate hub page.</p>
+
+  <!-- SEARCH -->
+  <div class="search">
+    <input id="searchInput" oninput="filterCards()" placeholder="🔍 Search — type duo, scanner, portfolio, detector, presentation, home...">
+  </div>
+
+  <!-- ALL PAGES -->
+  <div class="grid" id="grid">
+
+    <div class="card big" data-keywords="home main site diwali greeting start">
+      <div class="icon">🏠</div>
+      <h2>Home / Main Site</h2>
+      <p>Main Diwali Greeting + Harit Utsav AI intro. This is your original index.html — not changed.</p>
+      <a href="index.html">🏠 Open Home →</a>
+    </div>
+
+    <div class="card big" data-keywords="duo camera mic call video both share live stage">
+      <div class="icon">📹</div>
+      <h2>Duo Call — Camera + Mic Only</h2>
+      <p>Only 2 Cameras + Mic sharing. For Ashish + Hephzibah together. No slides. Room ID: jru123</p>
+      <a href="duo.html">📹 Open Duo Call →</a>
+    </div>
+
+    <div class="card" data-keywords="presentation ppt slides problem solution demo harit utsav">
+      <div class="icon">📊</div>
+      <h2>Presentation</h2>
+      <p>Main PPT — Problem, Solution, Demo links, Jharkhand, Impact.</p>
+      <a class="white" href="presentation.html">📊 Open Presentation →</a>
+    </div>
+
+    <div class="card" data-keywords="portfolio ashish hero face voice intro">
+      <div class="icon">👤</div>
+      <h2>Portfolio Hero</h2>
+      <p>Green particle face + Male Indian Voice intro about you — Locked V8.</p>
+      <a class="outline" href="portfolio.html">👤 Open Portfolio →</a>
+    </div>
+
+    <div class="card" data-keywords="cracker scanner scan packet rating pm25 db eco">
+      <div class="icon">📷</div>
+      <h2>Cracker Scanner</h2>
+      <p>Real Camera AI — Scan cracker packet → Rating + Harm + PM2.5 + dB + Eco Alternative.</p>
+      <a class="pink" href="scanner.html">📷 Open Scanner →</a>
+    </div>
+
+    <div class="card" data-keywords="detector detection fire smoke fireworks camera monitor safe alert">
+      <div class="icon">🔥</div>
+      <h2>Fire Detector</h2>
+      <p>Camera Monitor — Fire / Smoke / Fireworks Detection. SAFE / ALERT.</p>
+      <a class="white" href="detector.html">🔥 Open Detector →</a>
+    </div>
+
+  </div>
+
+  <div class="Sequence">
+    <b>🎯 — Showing the order sequence :</b><br>
+    1. Presentation → Explain idea<br>
+    2. Duo Call → Show both cameras live<br>
+    3. Portfolio → Green face + voice intro<br>
+    4. Scanner → Scan cracker packet<br>
+    5. Detector → Fire / Smoke detection
+  </div>
+
+  <div class="footer">Harit Utsav AI • Hub Page — Separate from index.html<br>Ashish Kumar & Hephzibah Toppo • MVA Robotics Innovation Org<br>“Our festivals taught us to respect nature. Technology should help us protect it.”</div>
+
+<script>
+function filterCards(){
+  let q=document.getElementById('searchInput').value.toLowerCase().trim();
+  document.querySelectorAll('.card').forEach(c=>{
+    let text=(c.innerText+' '+c.dataset.keywords).toLowerCase();
+    c.classList.toggle('hidden', q && !text.includes(q));
+  });
+}
+</script>
+</body>
+  </html>
