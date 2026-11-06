@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DuoStage | Camera + Mic Sharing</title>
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<style>
+  *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial,sans-serif}
+  body{background:#02120f;color:#fff;padding:14px;max-width:900px;margin:0 auto}
+  .top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+  .logo{font-weight:900;color:#8affc1;font-size:22px;line-height:1}
+  .logo span{font-size:10px;display:block;color:#aaa;letter-spacing:2px;margin-top:3px}
+  .live{background:#ff2d55;color:#fff;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:800}
+  .live i{display:inline-block;width:8px;height:8px;background:#fff;border-radius:50%;margin-right:5px;animation:blink 1s infinite}
+  @keyframes blink{50%{opacity:.2}}
+  h1{font-size:28px;line-height:1.2;margin:16px 0 6px}
+  h1 span{color:#8affc1}
+  p.sub{color:#c8d6d0;line-height:1.6;font-size:14px}
+  .join{background:#0a2e26;border:1px solid #1e4d3d;border-radius:18px;padding:16px;margin:14px 0}
+  .join h3{color:#8affc1;margin-bottom:10px}
+  .join input{width:100%;padding:13px;border-radius:12px;border:1px solid #2bff9d;background:#02120f;color:#fff;font-size:15px;margin-bottom:10px;outline:none}
+  .join .row{display:flex;gap:10px}
+  .join .row input{flex:1}
+  @media(max-width:640px){.join .row{flex-direction:column}}
+  .join button{width:100%;padding:14px;border:0;border-radius:12px;background:#4dffb0;font-weight:900;font-size:15px;cursor:pointer}
+  .join p{font-size:12px;color:#aaa;margin-top:8px;line-height:1.5}
+  .status{padding:12px;border-radius:10px;background:#123a2f;text-align:center;font-size:13px;margin:10px 0;display:none;line-height:1.5}
+  .duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+  @media(max-width:640px){.duo{grid-template-columns:1fr}}
+  .person{position:relative;background:#000;border-radius:18px;overflow:hidden;border:2px solid #1e4d3d;min-height:280px}
+  .person.speaking{border-color:#4dffb0;box-shadow:0 0 0 3px #4dffb022}
+  .person video{width:100%;height:280px;object-fit:cover;display:block;background:#111}
+  .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#888;font-size:13px;text-align:center;padding:20px}
+  .ph b{color:#fff;font-size:38px}
+  .tag-name{position:absolute;left:10px;bottom:10px;background:rgba(0,0,0,.78);padding:8px 11px;border-radius:12px;font-size:12px;line-height:1.3}
+  .tag-name b{font-size:13px}
+  .tag-name span{color:#8affc1}
+  .mic-badge{position:absolute;right:10px;top:10px;background:#4dffb0;color:#000;padding:6px 10px;border-radius:20px;font-size:11px;font-weight:800}
+  .mic-badge.off{background:#ff5da2;color:#fff}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 14px}
+  .controls button{flex:1;min-width:140px;border:0;padding:13px;border-radius:12px;font-weight:800;cursor:pointer;font-size:13px}
+  .btn-green{background:#4dffb0;color:#000}
+  .btn-dark{background:#123a2f;color:#fff;border:1px solid #2bff9d}
+  .btn-pink{background:#ff5da2;color:#fff}
+  .audio-bar{background:#0a2e26;border:1px solid #1e4d3d;border-radius:16px;padding:14px;margin:12px 0;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+  .audio-bar label{font-size:13px;display:flex;gap:8px;align-items:center}
+  .audio-bar input{width:18px;height:18px;accent-color:#4dffb0}
+  .meter{height:8px;background:#123a2f;border-radius:20px;overflow:hidden;flex:1;min-width:120px}
+  .meter i{display:block;height:100%;width:35%;background:linear-gradient(90deg,#4dffb0,#4dd8ff)}
+  .note{background:#fff3cd;color:#333;padding:12px;border-radius:12px;font-size:13px;line-height:1.5;margin:12px 0}
+  .links{display:flex;flex-wrap:wrap;gap:8px;margin:14px 0}
+  .links a{flex:1;min-width:140px;text-align:center;padding:13px;border-radius:12px;text-decoration:none;font-weight:800;font-size:13px}
+  .footer{text-align:center;color:#aaa;font-size:12px;margin:20px 0;line-height:1.6}
+</style>
+</head>
+<body>
+  <div class="top">
+    <div class="logo">DUOSTAGE <span>CAMERA + MIC SHARING • LIVE</span></div>
+    <span class="live"><i></i>LIVE</span>
+  </div>
+
+  <h1>Two Cameras.<br><span>One Stage.</span></h1>
+  <p class="sub">Ashish Kumar & Hephzibah Toppo — Join same Room ID on both devices. No Zoom needed.</p>
+
+  <!-- JOIN -->
+  <div class="join" id="joinBox">
+    <h3>🔗 Join Room — Do this on BOTH devices</h3>
+    <div class="row">
+      <input id="myName" placeholder="Your Name — e.g. Ashish / Hephzibah" value="Ashish Kumar">
+      <input id="roomId" placeholder="Room ID — both use SAME, e.g. jru123" value="jru123">
+    </div>
+    <button onclick="joinRoom()">▶ Start Camera + Mic + Join Room</button>
+    <p><b>How to use:</b> 1) Person 1 opens this page, enters Room ID <b>jru123</b>, clicks Join, copies their ID from green bar. 2) Person 2 opens same page, same Room ID, clicks Join, pastes Person 1's ID when asked. 3) Both videos connect.<br>Allow Camera + Mic when browser asks.</p>
+  </div>
+  <div class="status" id="statusBox">Connecting...</div>
+
+  <!-- DUAL VIDEO ONLY -->
+  <div class="duo">
+    <div class="person speaking" id="box1">
+      <video id="localVideo" autoplay playsinline muted></video>
+      <div class="ph" id="ph1"><b>👩‍💻</b><span>Your Camera<br>Join Room to Start</span></div>
+      <div class="tag-name"><b id="name1">You (Local)</b><br><span>● <span id="loc1">Offline</span></span></div>
+      <div class="mic-badge" id="mic1">🎙️ MIC ON</div>
+    </div>
+    <div class="person" id="box2">
+      <video id="remoteVideo" autoplay playsinline></video>
+      <div class="ph" id="ph2"><b>🧑‍💻</b><span>Partner Camera<br>Waiting for partner...</span></div>
+      <div class="tag-name"><b id="name2">Partner (Remote)</b><br><span>● Waiting...</span></div>
+      <div class="mic-badge" id="mic2">🎙️ MIC ON</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn-green" onclick="toggleMyMic()">🎙️ Mute / Unmute Me</button>
+    <button class="btn-dark" onclick="toggleMyCam()">📷 Camera On / Off</button>
+    <button class="btn-pink" onclick="swapSpeaker()">🔄 Switch Speaker</button>
+    <button class="btn-dark" onclick="leaveRoom()">❌ Leave</button>
+  </div>
+
+  <div class="audio-bar">
+    <b>🎧 Audio</b>
+    <label><input type="checkbox" checked disabled> Noise Filter ON</label>
+    <label><input type="checkbox" checked disabled> Echo Cancellation ON</label>
+    <label><input type="checkbox" checked disabled> Auto Voice Balance</label>
+    <div class="meter"><i id="meterFill"></i></div>
+    <span style="font-size:12px;color:#8affc1">● Clear Audio</span>
+  </div>
+
+  <div class="note">💡 <b>Echo Tip:</b> If both devices are in SAME hall, keep ONE device mic ON, other device mic MUTE + speaker low. Zero echo.</div>
+
+  <div class="links">
+    <a href="presentation.html?v=final1" style="background:#4dffb0;color:#000">📊 Presentation</a>
+    <a href="detector.html?v=final1" style="background:#fff;color:#000">🔥 Fire Detector</a>
+    <a href="scanner.html?v=final1" style="background:#fff;color:#000">📷 Cracker Scanner</a>
+    <a href="portfolio.html?v=final1" style="background:transparent;color:#fff;border:1px solid #4dffb0">👤 Portfolio</a>
+  </div>
+
+  <div class="footer">DuoStage • Camera + Mic Sharing Only<br>Ashish Kumar & Hephzibah Toppo</div>
+
+<script>
+let peer=null, conn=null, call=null, localStream=null, myId="", room="";
+
+function showStatus(t){ let s=document.getElementById('statusBox'); s.style.display='block'; s.innerHTML=t; }
+
+async function joinRoom(){
+  let name=document.getElementById('myName').value.trim() || 'Guest';
+  room=document.getElementById('roomId').value.trim() || 'jru123';
+  document.getElementById('name1').innerText=name+' (You)';
+  document.getElementById('loc1').innerText='Room: '+room;
+  showStatus('📷 Requesting Camera + Mic with Noise Filter + Echo Cancellation...');
+  try{
+    localStream=await navigator.mediaDevices.getUserMedia({
+      video:{width:{ideal:1280},height:{ideal:720},facingMode:"user"},
+      audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true}
+    });
+    document.getElementById('localVideo').srcObject=localStream;
+    document.getElementById('ph1').style.display='none';
+    document.getElementById('joinBox').style.display='none';
+  }catch(e){ alert('Please Allow Camera + Mic. Error: '+e.message); return; }
+
+  let myPeerId = room + '-' + name.replace(/\s+/g,'').toLowerCase() + '-' + Math.floor(Math.random()*1000);
+  peer=new Peer(myPeerId);
+  peer.on('open', (id)=>{
+    myId=id;
+    showStatus('✅ You are in Room: <b>'+room+'</b><br>Your ID: <b>'+id+'</b><br>Share this ID with your partner. They will paste it to connect.');
+    setTimeout(()=>tryConnect(), 1500);
+  });
+  peer.on('call', (incomingCall)=>{
+    incomingCall.answer(localStream);
+    incomingCall.on('stream', (remoteStream)=>{
+      document.getElementById('remoteVideo').srcObject=remoteStream;
+      document.getElementById('ph2').style.display='none';
+      document.getElementById('name2').innerText='Partner Connected';
+      showStatus('✅ Partner Connected! Both cameras LIVE.');
+    });
+  });
+  peer.on('connection', (c)=>{
+    conn=c;
+    c.on('data', handleData);
+    c.on('open', ()=>showStatus('✅ Partner Connected! Both cameras LIVE.'));
+  });
+  peer.on('error', (err)=>{ console.log(err); });
+}
+
+function tryConnect(){
+  setTimeout(()=>{
+    if(!document.getElementById('remoteVideo').srcObject){
+      let pid=prompt('🔗 To connect both devices:\n\nAsk your partner for their ID shown in green bar (e.g. jru123-ashish-123).\nPaste Partner ID here:');
+      if(pid && pid.trim()){
+        connectTo(pid.trim());
+      } else {
+        showStatus('⏳ Waiting... Your ID is: <b>'+myId+'</b><br>Share this ID with your partner, they will paste it to connect.');
+      }
+    }
+  }, 4000);
+}
+
+function connectTo(partnerId){
+  if(!peer) return;
+  conn=peer.connect(partnerId);
+  conn.on('open', ()=>{ showStatus('✅ Partner Connected! Both cameras LIVE.'); });
+  conn.on('data', handleData);
+  call=peer.call(partnerId, localStream);
+  call.on('stream', (remoteStream)=>{
+    document.getElementById('remoteVideo').srcObject=remoteStream;
+    document.getElementById('ph2').style.display='none';
+    document.getElementById('name2').innerText='Partner Connected';
+  });
+}
+
+function handleData(data){
+  if(data.type==='speaker'){ swapTo(data.val); }
+}
+function broadcast(data){ if(conn && conn.open) conn.send(data); }
+function swapTo(n){
+  document.getElementById('box1').classList.toggle('speaking', n===1);
+  document.getElementById('box2').classList.toggle('speaking', n===2);
+}
+function swapSpeaker(){
+  let is1=document.getElementById('box1').classList.contains('speaking');
+  swapTo(is1?2:1);
+  broadcast({type:'speaker', val: is1?2:1});
+}
+function toggleMyMic(){
+  if(!localStream) return;
+  let track=localStream.getAudioTracks()[0]; if(!track) return;
+  track.enabled=!track.enabled;
+  document.getElementById('mic1').innerText=track.enabled?'🎙️ MIC ON':'🔇 MUTED';
+  document.getElementById('mic1').classList.toggle('off', !track.enabled);
+}
+function toggleMyCam(){
+  if(!localStream) return;
+  let track=localStream.getVideoTracks()[0]; if(!track) return;
+  track.enabled=!track.enabled;
+  document.getElementById('ph1').style.display=track.enabled?'none':'flex';
+}
+function leaveRoom(){ location.reload(); }
+setInterval(()=>{ let m=document.getElementById('meterFill'); if(m) m.style.width=(25+Math.random()*55)+'%'; },600);
+</script>
+</body>
+  </html> 
