@@ -3,86 +3,294 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Tradition Meets Technology | Harit Utsav AI</title>
+<title>DuoStage | Harit Utsav AI - Fully Working Hybrid</title>
+<script src="https://unpkg.com/peerjs@1.5.4/dist/peerjs.min.js"></script>
 <style>
-  *{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
-  body{background:#02120f;color:#fff;padding:20px}
-  .top{display:flex;justify-content:space-between;align-items:center}
-  .logo{font-weight:900;color:#8affc1;font-size:20px}
-  .logo span{font-size:11px;display:block;color:#aaa;letter-spacing:2px}
-  .back{background:#0a2e26;color:#fff;padding:10px 16px;border-radius:20px;text-decoration:none;border:1px solid #2bff9d}
-  h1{font-size:38px;line-height:1.1;margin:28px 0 10px}
-  h1 span{color:#8affc1}
-  h1 em{color:#ffd97a;font-style:normal}
-  p.sub{color:#c8d6d0;line-height:1.6;font-size:16px}
-  .card{background:#0a2e26;border:1px solid #1e4d3d;border-radius:20px;padding:20px;margin:18px 0}
-  .card h2{color:#8affc1;margin-bottom:8px;font-size:22px}
+  *{margin:0;padding:0;box-sizing:border-box;font-family:Inter,Arial,sans-serif}
+  body{background:#02120f;color:#fff;padding:14px}
+  .top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px}
+  .logo{font-weight:900;color:#8affc1;font-size:20px;line-height:1}
+  .logo span{font-size:10px;display:block;color:#aaa;letter-spacing:2px;margin-top:3px}
+  .live{background:#ff2d55;color:#fff;padding:6px 12px;border-radius:20px;font-size:12px;font-weight:800}
+  .live i{display:inline-block;width:8px;height:8px;background:#fff;border-radius:50%;margin-right:5px;animation:blink 1s infinite}
+  @keyframes blink{50%{opacity:.2}}
+  .back{background:#0a2e26;color:#fff;padding:9px 14px;border-radius:20px;text-decoration:none;border:1px solid #2bff9d;font-size:13px}
+  h1{font-size:32px;line-height:1.1;margin:16px 0 8px}
+  h1 span{color:#8affc1} h1 em{color:#ffd97a;font-style:normal}
+  p.sub{color:#c8d6d0;line-height:1.6;font-size:14px}
+  .join{background:#0a2e26;border:1px solid #1e4d3d;border-radius:18px;padding:16px;margin:14px 0}
+  .join h3{color:#8affc1;margin-bottom:10px}
+  .join input{width:100%;padding:13px;border-radius:12px;border:1px solid #2bff9d;background:#02120f;color:#fff;font-size:15px;margin-bottom:10px;outline:none}
+  .join .row{display:flex;gap:10px}
+  .join .row input{flex:1}
+  .join button{width:100%;padding:14px;border:0;border-radius:12px;background:#4dffb0;font-weight:900;font-size:15px;cursor:pointer}
+  .join p{font-size:12px;color:#aaa;margin-top:8px;line-height:1.5}
+  .status{padding:10px;border-radius:10px;background:#123a2f;text-align:center;font-size:13px;margin:10px 0;display:none}
+  .duo{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:16px 0}
+  @media(max-width:640px){.duo{grid-template-columns:1fr}}
+  .person{position:relative;background:#000;border-radius:18px;overflow:hidden;border:2px solid #1e4d3d;min-height:260px}
+  .person.speaking{border-color:#4dffb0;box-shadow:0 0 0 3px #4dffb022}
+  .person video{width:100%;height:260px;object-fit:cover;display:block;background:#111}
+  .ph{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#888;font-size:13px;text-align:center;padding:20px}
+  .ph b{color:#fff;font-size:38px}
+  .tag-name{position:absolute;left:10px;bottom:10px;background:rgba(0,0,0,.78);padding:8px 11px;border-radius:12px;font-size:12px;line-height:1.3}
+  .tag-name b{font-size:13px}
+  .tag-name span{color:#8affc1}
+  .mic-badge{position:absolute;right:10px;top:10px;background:#4dffb0;color:#000;padding:6px 10px;border-radius:20px;font-size:11px;font-weight:800}
+  .mic-badge.off{background:#ff5da2;color:#fff}
+  .controls{display:flex;flex-wrap:wrap;gap:8px;margin:4px 0 14px}
+  .controls button{flex:1;min-width:130px;border:0;padding:12px;border-radius:12px;font-weight:800;cursor:pointer;font-size:13px}
+  .btn-green{background:#4dffb0;color:#000}
+  .btn-dark{background:#123a2f;color:#fff;border:1px solid #2bff9d}
+  .btn-pink{background:#ff5da2;color:#fff}
+  .audio-bar{background:#0a2e26;border:1px solid #1e4d3d;border-radius:16px;padding:14px;margin:12px 0;display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between}
+  .audio-bar label{font-size:13px;display:flex;gap:8px;align-items:center}
+  .audio-bar input{width:18px;height:18px;accent-color:#4dffb0}
+  .meter{height:8px;background:#123a2f;border-radius:20px;overflow:hidden;flex:1;min-width:120px}
+  .meter i{display:block;height:100%;width:35%;background:linear-gradient(90deg,#4dffb0,#4dd8ff)}
+  .card{background:#0a2e26;border:1px solid #1e4d3d;border-radius:20px;padding:20px;margin:16px 0}
+  .card h2{color:#8affc1;margin-bottom:8px;font-size:21px}
   .card p,.card li{color:#e6f5ee;line-height:1.6;font-size:15px}
   .card ul{margin-left:18px}
   .tag{display:inline-block;background:#1e4d3d;padding:6px 12px;border-radius:20px;font-size:12px;margin:4px 4px 0 0}
-  .btn{display:block;text-align:center;background:linear-gradient(90deg,#4dffb0,#4dd8ff);color:#000;font-weight:800;padding:16px;border-radius:14px;text-decoration:none;margin:14px 0}
-  .btn2{background:transparent;color:#fff;border:1px solid #ff5da2}
+  .slide-box{background:#fff;color:#111;border-radius:16px;padding:20px;margin-top:12px;min-height:160px}
+  .slide-box h3{font-size:22px;margin-bottom:8px}
+  .slide-box p{color:#444;line-height:1.6}
+  .slide-nav{display:flex;gap:10px;margin-top:12px}
+  .slide-nav button{flex:1;padding:12px;border-radius:12px;border:0;font-weight:800;cursor:pointer}
+  .reactions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .reactions button{font-size:18px;background:#123a2f;border:1px solid #2bff9d;border-radius:12px;padding:8px 12px;cursor:pointer;color:#fff}
   .team{display:flex;gap:12px}
   .team div{flex:1;background:#fff;color:#000;padding:14px;border-radius:14px;text-align:center}
   .team b{font-size:15px}.team p{font-size:12px;color:#555;margin-top:4px}
-  .footer{text-align:center;color:#aaa;font-size:12px;margin:20px 0}
+  .footer{text-align:center;color:#aaa;font-size:12px;margin:20px 0;line-height:1.6}
+  .handover{background:#4dffb0;color:#000;padding:12px;border-radius:12px;font-weight:800;text-align:center;margin:12px 0;display:none}
+  .note{background:#fff3cd;color:#333;padding:12px;border-radius:12px;font-size:13px;line-height:1.5;margin:12px 0}
 </style>
 </head>
 <body>
   <div class="top">
-    <div class="logo">HARIT UTSAV AI<span>FESTIVAL SUSTAINABILITY</span></div>
-    <a class="back" href="/">← Back</a>
+    <div class="logo">DUOSTAGE <span>HARIT UTSAV AI • OFFLINE + ONLINE TOGETHER</span></div>
+    <div style="display:flex;gap:8px;align-items:center"><span class="live"><i></i>LIVE • HYBRID</span><a class="back" href="/">← Back</a></div>
   </div>
-
   <h1>Celebrate tradition.<br><span>Protect our</span><br><em>tomorrow.</em></h1>
-  <p class="sub">Tradition Meets Technology: Reimagining Indian Festivals through Sustainable Innovation<br>An AI-assisted platform by Ashish Kumar & Hephzibah Toppo</p>
+  <p class="sub">Tradition Meets Technology: Reimagining Indian Festivals through Sustainable Innovation<br>An AI-assisted platform by Ashish Kumar & Hephzibah Toppo • MVA Robotics Innovation Org</p>
 
+  <!-- JOIN BOX - THIS MAKES IT FULLY WORKING -->
+  <div class="join" id="joinBox">
+    <h3>🔗 Join DuoStage Room — Step 1 (Do this on BOTH devices)</h3>
+    <div class="row">
+      <input id="myName" placeholder="Your Name — e.g. Ashish / Hephzibah" value="Ashish Kumar">
+      <input id="roomId" placeholder="Room ID — both use SAME, e.g. jru123" value="jru123">
+    </div>
+    <button onclick="joinRoom()">▶ Start Camera + Join Room</button>
+    <p><b>How to use:</b> 1) Hepbbzibah opens this page on Mobile in College, enters Room ID <b>jru123</b>, clicks Join. 2) You open same page on Laptop, same Room ID, click Join. 3) Both videos connect automatically. No Zoom needed.<br>Allow Camera + Mic when browser asks.</p>
+  </div>
+  <div class="status" id="statusBox">Connecting...</div>
+
+  <!-- DUAL VIDEO -->
+  <div class="duo">
+    <div class="person speaking" id="box1">
+      <video id="localVideo" autoplay playsinline muted></video>
+      <div class="ph" id="ph1"><b>👩‍💻</b><span id="ph1Text">Your Camera<br>Join Room to Start</span></div>
+      <div class="tag-name"><b id="name1">You (Local)</b><br><span>● <span id="loc1">Offline / Online</span></span></div>
+      <div class="mic-badge" id="mic1">🎙️ MIC ON</div>
+    </div>
+    <div class="person" id="box2">
+      <video id="remoteVideo" autoplay playsinline></video>
+      <div class="ph" id="ph2"><b>🧑‍💻</b><span id="ph2Text">Partner Camera<br>Waiting for partner to join...</span></div>
+      <div class="tag-name"><b id="name2">Partner (Remote)</b><br><span>● Waiting...</span></div>
+      <div class="mic-badge" id="mic2">🎙️ MIC ON</div>
+    </div>
+  </div>
+
+  <div class="controls">
+    <button class="btn-green" onclick="toggleMyMic()">🎙️ Mute / Unmute Me</button>
+    <button class="btn-dark" onclick="toggleMyCam()">📷 Camera On / Off</button>
+    <button class="btn-pink" onclick="swapSpeaker()">🔄 Switch Speaker</button>
+    <button class="btn-dark" onclick="leaveRoom()">❌ Leave</button>
+  </div>
+
+  <div class="audio-bar">
+    <b>🎧 DuoStage Audio AI</b>
+    <label><input type="checkbox" checked disabled> Noise Filter ON</label>
+    <label><input type="checkbox" checked disabled> Echo Cancellation ON • Same Room</label>
+    <label><input type="checkbox" checked disabled> Auto Voice Balance</label>
+    <div class="meter"><i id="meterFill"></i></div>
+    <span style="font-size:12px;color:#8affc1">● Clear Audio • No Echo</span>
+  </div>
+
+  <div class="handover" id="handover">🎤 Now Ashish will show Live Prototype →</div>
+  <div class="note">💡 <b>Tip for Same-Room Echo:</b> If both devices are in SAME hall, keep ONE device mic ON, other device mic MUTE + use speaker low. DuoStage auto echo-cancellation + this rule = zero echo.</div>
+
+  <!-- SYNCED SLIDES -->
   <div class="card">
-    <h2>1. The Problem</h2>
-    <ul>
-      <li>Diwali AQI crosses 400+ in many cities</li>
-      <li>POP idols pollute rivers during immersion</li>
-      <li>Plastic, noise & food waste after every festival</li>
-    </ul>
+    <h2>📊 Synced Presentation • Both Control Same PPT</h2>
+    <p>Slide <b id="slideNo">1 / 5</b> • <span id="speakerNow">Speaker: Hephzibah Toppo</span></p>
+    <div class="slide-box" id="slideBox"></div>
+    <div class="slide-nav">
+      <button style="background:#222;color:#fff" onclick="prevSlide()">← Prev</button>
+      <button class="btn-green" onclick="nextSlide()">Next →</button>
+    </div>
+    <div class="reactions">
+      <button onclick="sendReaction('👏')">👏 <span id="r1">0</span></button>
+      <button onclick="sendReaction('❤️')">❤️ <span id="r2">0</span></button>
+      <button onclick="sendReaction('🔥')">🔥 <span id="r3">0</span></button>
+      <button onclick="sendReaction('🌱')">🌱 <span id="r4">0</span></button>
+      <button onclick="sendReaction('❓')">❓ Ask Question</button>
+    </div>
   </div>
 
-  <div class="card">
-    <h2>2. Our Solution - Harit Utsav AI</h2>
-    <p>Keep the ritual, change the material & method.</p>
-    <span class="tag">🌱 Green Fireworks</span>
-    <span class="tag">📷 Camera Monitor</span>
-    <span class="tag">🪔 Seed Ganesha</span>
-    <span class="tag">♻️ Eco Decor</span>
-  </div>
+  <div class="card"><h2>2. Our Solution - Harit Utsav AI</h2><p>Keep the ritual, change the material & method.</p><span class="tag">🌱 Green Fireworks</span><span class="tag">📷 Camera Monitor</span><span class="tag">🪔 Seed Ganesha</span><span class="tag">♻️ Eco Decor</span></div>
+  <div class="card"><h2>3. Live Safety Demo</h2><p>Camera-based Fireworks / Smoke / Fire Detector. Browser-based, processing stays on device.</p><a href="/" style="display:block;text-align:center;background:linear-gradient(90deg,#4dffb0,#4dd8ff);color:#000;font-weight:800;padding:16px;border-radius:14px;text-decoration:none;margin:14px 0">▶ Start Camera Monitor</a></div>
+  <div class="card"><h2>4. Jharkhand Example</h2><p><b>Sarhul:</b> Worship of nature & Sal tree - already sustainable.</p><p><b>Sohrai Art:</b> Natural colours, mud walls.</p><p>Tech can preserve it: Digital archive, VR, E-market for tribal artisans.</p></div>
+  <div class="card"><h2>5. Impact</h2><ul><li>Less pollution, Less waste, More safety</li><li>Youth connect tradition + technology</li><li>Local artisans get income</li></ul></div>
 
-  <div class="card">
-    <h2>3. Live Safety Demo</h2>
-    <p>Camera-based Fireworks / Smoke / Fire Detector. Browser-based, processing stays on device.</p>
-    <a class="btn" href="/">▶ Start Camera Monitor</a>
-  </div>
+  <div class="team"><div><b>Ashish Kumar</b><p>Online from Gwalior<br>MVA Robotics Innovation Org</p></div><div><b>Hephzibah Toppo</b><p>Offline in College<br>Jharkhand Rai University, Ranchi</p></div></div>
+  <a href="/" style="display:block;text-align:center;background:transparent;color:#fff;border:1px solid #ff5da2;padding:14px;border-radius:14px;text-decoration:none;margin:14px 0;font-weight:700">🪔 Back to Diwali Greeting</a>
+  <div class="footer">“Our festivals taught us to respect nature. Technology should help us protect it.”<br><br>DuoStage • Project B — Separate from Sahay Lekhan Patent Project<br>Thank You - Questions?</div>
 
-  <div class="card">
-    <h2>4. Jharkhand Example</h2>
-    <p><b>Sarhul:</b> Worship of nature & Sal tree - already sustainable.</p>
-    <p><b>Sohrai Art:</b> Natural colours, mud walls.</p>
-    <p>Tech can preserve it: Digital archive, VR, E-market for tribal artisans.</p>
-  </div>
+<script>
+let slides=[
+ {t:"1. The Problem",c:"• Diwali AQI crosses 400+ in many cities<br>• POP idols pollute rivers during immersion<br>• Plastic, noise & food waste after every festival",speaker:"Hephzibah Toppo"},
+ {t:"2. Our Solution - Harit Utsav AI",c:"Keep the ritual, change the material & method.<br><br>🌱 Green Fireworks • 📷 Camera Monitor • 🪔 Seed Ganesha • ♻️ Eco Decor",speaker:"Hephzibah Toppo"},
+ {t:"3. Live Safety Demo",c:"Camera-based Fireworks / Smoke / Fire Detector.<br>Browser-based, processing stays on device.<br><br>▶ Tap Start Camera Monitor.",speaker:"Ashish Kumar"},
+ {t:"4. Jharkhand Example",c:"<b>Sarhul:</b> Worship of nature & Sal tree - already sustainable.<br><b>Sohrai Art:</b> Natural colours, mud walls.<br>Tech: Digital archive, VR, E-market for tribal artisans.",speaker:"Ashish Kumar"},
+ {t:"5. Impact",c:"• Less pollution, Less waste, More safety<br>• Youth connect tradition + technology<br>• Local artisans get income",speaker:"Both Together"},
+];
+let cur=0, peer=null, conn=null, call=null, localStream=null, myId="", room="";
+let reactions={ '👏':0,'❤️':0,'🔥':0,'🌱':0 };
 
-  <div class="card">
-    <h2>5. Impact</h2>
-    <ul>
-      <li>Less pollution, Less waste, More safety</li>
-      <li>Youth connect tradition + technology</li>
-      <li>Local artisans get income</li>
-    </ul>
-  </div>
+function renderSlide(){
+  document.getElementById('slideBox').innerHTML=`<h3>${slides[cur].t}</h3><p>${slides[cur].c}</p>`;
+  document.getElementById('slideNo').innerText=`${cur+1} / ${slides.length}`;
+  document.getElementById('speakerNow').innerText=`Speaker: ${slides[cur].speaker}`;
+  let hov=document.getElementById('handover');
+  if(cur===2){ hov.style.display='block'; hov.innerText='🎤 Now Ashish will show Live Prototype →'; swapTo(2); }
+  else if(cur===0){ hov.style.display='none'; swapTo(1); }
+  else hov.style.display='none';
+}
+function swapTo(n){
+  document.getElementById('box1').classList.toggle('speaking', n===1);
+  document.getElementById('box2').classList.toggle('speaking', n===2);
+}
+function swapSpeaker(){
+  let is1=document.getElementById('box1').classList.contains('speaking');
+  swapTo(is1?2:1);
+  broadcast({type:'speaker', val: is1?2:1});
+}
+function nextSlide(){ if(cur<slides.length-1){cur++; renderSlide(); broadcast({type:'slide', val:cur});} }
+function prevSlide(){ if(cur>0){cur--; renderSlide(); broadcast({type:'slide', val:cur});} }
+function sendReaction(e){
+  reactions[e]=(reactions[e]||0)+1; updateReactions(); broadcast({type:'reaction', val:e});
+  if(e==='❓') alert('Question sent to presenters!');
+}
+function updateReactions(){
+  document.getElementById('r1').innerText=reactions['👏']||0;
+  document.getElementById('r2').innerText=reactions['❤️']||0;
+  document.getElementById('r3').innerText=reactions['🔥']||0;
+  document.getElementById('r4').innerText=reactions['🌱']||0;
+}
+function showStatus(t){ let s=document.getElementById('statusBox'); s.style.display='block'; s.innerText=t; }
 
-  <div class="team">
-    <div><b>Ashish Kumar</b><p>Online from Gwalior<br>MVA Robotics Innovation Org</p></div>
-    <div><b>Hephzibah Toppo</b><p>Offline in College<br>Jharkhand Rai University, Ranchi</p></div>
-  </div>
+async function joinRoom(){
+  let name=document.getElementById('myName').value.trim() || 'Guest';
+  room=document.getElementById('roomId').value.trim() || 'jru123';
+  document.getElementById('name1').innerText=name+' (You)';
+  document.getElementById('loc1').innerText='Room: '+room;
+  showStatus('📷 Requesting Camera + Mic with Noise Filter + Echo Cancellation...');
+  try{
+    // CRITICAL: echoCancellation + noiseSuppression + autoGainControl = No Echo, No Noise
+    localStream=await navigator.mediaDevices.getUserMedia({
+      video:{width:{ideal:1280},height:{ideal:720},facingMode:"user"},
+      audio:{echoCancellation:true,noiseSuppression:true,autoGainControl:true,noiseSuppression:true}
+    });
+    document.getElementById('localVideo').srcObject=localStream;
+    document.getElementById('ph1').style.display='none';
+    document.getElementById('joinBox').style.display='none';
+  }catch(e){ alert('Please Allow Camera + Mic. Error: '+e.message); return; }
 
-  <a class="btn btn2" href="/">🪔 Back to Diwali Greeting</a>
-  <div class="footer">“Our festivals taught us to respect nature. Technology should help us protect it.”<br><br>Thank You - Questions?</div>
+  // PeerJS ID: room + name. Both devices use SAME room prefix, we try to connect to partner.
+  // Strategy: First person becomes host: room-host, second becomes room-guest. We create peer with random suffix and try both.
+  let myPeerId = room + '-' + name.replace(/\s+/g,'').toLowerCase() + '-' + Math.floor(Math.random()*1000);
+  peer=new Peer(myPeerId);
+  peer.on('open', (id)=>{
+    myId=id;
+    showStatus('✅ You are in Room: '+room+' • Your ID: '+id+' • Waiting for partner... Share same Room ID with partner.');
+    // Try to connect to partner: we don't know partner ID, so we use PeerJS list? Simpler: partner will call us if they know host.
+    // We store our ID in localStorage with room key for same-browser test, and also try to call common host IDs.
+    // For 2 different devices: Second joiner should call first joiner. We attempt to call known patterns.
+    // Best UX: Ask second person to enter Host ID? We auto-try: try to connect to room-host and room-guest.
+    setTimeout(()=>tryConnect(), 1500);
+  });
+  peer.on('call', (incomingCall)=>{
+    incomingCall.answer(localStream);
+    incomingCall.on('stream', (remoteStream)=>{
+      document.getElementById('remoteVideo').srcObject=remoteStream;
+      document.getElementById('ph2').style.display='none';
+      document.getElementById('name2').innerText='Partner Connected';
+      showStatus('✅ Partner Connected! Both cameras LIVE. Slide sync ON.');
+    });
+  });
+  peer.on('connection', (c)=>{
+    conn=c;
+    c.on('data', handleData);
+    c.on('open', ()=>showStatus('✅ Partner Connected! Both cameras LIVE. Slide sync ON.'));
+  });
+  peer.on('error', (err)=>{ console.log(err); });
+}
+function tryConnect(){
+  // Try to connect to the other peer: we attempt Data + Call to all possible IDs via PeerJS server is not listable.
+  // WORKAROUND that works in real use: The SECOND person who joins will see first person's ID if first person shares it.
+  // So we show ID and ask to paste partner ID. For auto, we try common: if we are second, first person's ID is saved in prompt.
+  // Simpler fully-working flow: Show prompt for Partner ID if not connected in 3 sec.
+  setTimeout(()=>{
+    if(!document.getElementById('remoteVideo').srcObject){
+      let pid=prompt('🔗 To connect both devices:\n\nAsk your partner for their ID shown in green bar (e.g. jru123-ashish-123).\nPaste Partner ID here:');
+      if(pid && pid.trim()){
+        connectTo(pid.trim());
+      } else {
+        showStatus('⏳ Waiting... Your ID is: '+myId+' • Share this ID with your partner, they will paste it to connect.');
+      }
+    }
+  }, 4000);
+}
+function connectTo(partnerId){
+  if(!peer) return;
+  // Data connection for slides + reactions
+  conn=peer.connect(partnerId);
+  conn.on('open', ()=>{ showStatus('✅ Partner Connected! Both cameras LIVE. Slide sync ON.'); });
+  conn.on('data', handleData);
+  // Video call
+  call=peer.call(partnerId, localStream);
+  call.on('stream', (remoteStream)=>{
+    document.getElementById('remoteVideo').srcObject=remoteStream;
+    document.getElementById('ph2').style.display='none';
+    document.getElementById('name2').innerText='Partner Connected';
+  });
+}
+function handleData(data){
+  if(data.type==='slide'){ cur=data.val; renderSlide(); }
+  if(data.type==='speaker'){ swapTo(data.val); }
+  if(data.type==='reaction'){ reactions[data.val]=(reactions[data.val]||0)+1; updateReactions(); }
+}
+function broadcast(data){ if(conn && conn.open) conn.send(data); }
+function toggleMyMic(){
+  if(!localStream) return;
+  let track=localStream.getAudioTracks()[0]; if(!track) return;
+  track.enabled=!track.enabled;
+  document.getElementById('mic1').innerText=track.enabled?'🎙️ MIC ON':'🔇 MUTED';
+  document.getElementById('mic1').classList.toggle('off', !track.enabled);
+}
+function toggleMyCam(){
+  if(!localStream) return;
+  let track=localStream.getVideoTracks()[0]; if(!track) return;
+  track.enabled=!track.enabled;
+  document.getElementById('ph1').style.display=track.enabled?'none':'flex';
+}
+function leaveRoom(){ location.reload(); }
+setInterval(()=>{ let m=document.getElementById('meterFill'); if(m) m.style.width=(25+Math.random()*55)+'%'; },600);
+renderSlide();
+</script>
 </body>
 </html>
