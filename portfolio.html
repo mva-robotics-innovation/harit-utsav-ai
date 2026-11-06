@@ -18,17 +18,18 @@
   .bottom p{font-size:12px;opacity:.55;margin-top:8px}
   .btn{pointer-events:auto;margin:5px 3px;display:inline-block;padding:11px 18px;border-radius:999px;background:#fff;color:#000;font-weight:700;font-size:13px;border:none;cursor:pointer;text-decoration:none}
   .btn-ghost{background:transparent;color:#fff;border:1px solid rgba(255,255,255,.35)}
-  #startBtn{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;padding:16px 26px;border-radius:999px;background:#fff;color:#000;font-weight:800;border:none;cursor:pointer;font-size:15px;box-shadow:0 0 60px rgba(255,255,255,.35)}
-  #status{position:fixed;top:60px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(0,0,0,.7);border:1px solid #fff;padding:7px 14px;border-radius:999px;font-size:12px;display:none}
+  #startBtn{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10;padding:16px 26px;border-radius:999px;background:#fff;color:#000;font-weight:800;border:none;cursor:pointer;font-size:15px;box-shadow:0 0 60px rgba(255,255,255,.35);text-align:center}
+  #status{position:fixed;top:62px;left:50%;transform:translateX(-50%);z-index:5;background:rgba(0,0,0,.8);border:1px solid #fff;padding:7px 14px;border-radius:999px;font-size:12px;display:none}
+  #debug{position:fixed;top:92px;left:50%;transform:translateX(-50%);z-index:5;font-size:11px;opacity:.7;background:rgba(0,0,0,.6);padding:5px 10px;border-radius:999px;display:none}
   video{position:fixed;bottom:8px;right:8px;width:92px;opacity:.35;border-radius:12px;z-index:1}
-  #segCanvas{display:none}
+  input[type=file]{display:none}
 </style>
 </head>
 <body>
 <canvas id="canvas"></canvas>
 <video id="video" autoplay muted playsinline></video>
-<canvas id="segCanvas" width="240" height="180"></canvas>
-<div id="status">Scanning… keep face in centre, good light</div>
+<div id="status">Looking for face… keep face centre, good light</div>
+<div id="debug">Face: NOT FOUND</div>
 
 <div class="ui">
   <div class="top"><span>AK.</span><span>PORTFOLIO — 2026</span><a href="presentation.html">← HOME</a></div>
@@ -38,13 +39,13 @@
     <h1>ASHISH <span>KUMAR</span></h1>
     <p>Tradition Meets Technology • HARIT UTSAV AI • Multi Modal Gen AI • MVA Robotics</p>
     <div><button class="btn" onclick="speakAboutMe()">🔊 Hear About Me</button><button class="btn btn-ghost" onclick="stopVoice()">Stop</button><a class="btn btn-ghost" href="presentation.html">View My Work ↗</a></div>
+    <div><label for="photoInput" class="btn btn-ghost" style="display:inline-block">📸 Use My Photo Instead</label><input type="file" id="photoInput" accept="image/*"></div>
   </div>
 </div>
 
-<button id="startBtn">✦ Enable Camera — Become Particles</button>
+<button id="startBtn">✦ Enable Camera<br><span style="font-size:12px;font-weight:600">FaceMesh Only — Works on Phone</span></button>
 
 <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/selfie_segmentation.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/face_mesh.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js"></script>
 <script>
@@ -56,105 +57,105 @@ const scene=new THREE.Scene();
 const camera=new THREE.PerspectiveCamera(55,innerWidth/innerHeight,0.1,100);
 camera.position.z=3.0;
 
-const COUNT=7000;
+// V6 CORE FIX: 468 face points x 12 copies = 5616 particles, each LOCKED to one landmark
+const PER_POINT=12;
+const COUNT=468*PER_POINT;
 const geo=new THREE.BufferGeometry();
 const pos=new Float32Array(COUNT*3);
 const targetPos=new Float32Array(COUNT*3);
-const homeUV=new Float32Array(COUNT*2); // FIXED home for each particle - THIS IS THE FIX
+const jitter=new Float32Array(COUNT*3);
 const colors=new Float32Array(COUNT*3);
 geo.setAttribute('position',new THREE.BufferAttribute(pos,3));
 geo.setAttribute('color',new THREE.BufferAttribute(colors,3));
-const mat=new THREE.PointsMaterial({size:0.018,vertexColors:true,transparent:true,opacity:0.95,sizeAttenuation:true,depthWrite:false});
+const mat=new THREE.PointsMaterial({size:0.02,vertexColors:true,transparent:true,opacity:0.95,sizeAttenuation:true,depthWrite:false});
 const points=new THREE.Points(geo,mat);
 scene.add(points);
 
-// FIXED GRID: particles spread evenly over frame, not random each frame
 for(let i=0;i<COUNT;i++){
-  // 60% in centre face area, 40% full frame for shoulders
-  let u,v;
-  if(i<COUNT*0.6){ u=0.25+Math.random()*0.5; v=0.08+Math.random()*0.45; } // face zone
-  else { u=Math.random(); v=0.05+Math.random()*0.85; } // body zone
-  homeUV[i*2]=u; homeUV[i*2+1]=v;
-  pos[i*3]=(Math.random()-0.5)*5; pos[i*3+1]=(Math.random()-0.5)*5; pos[i*3+2]=(Math.random()-0.5)*1;
-  targetPos[i*3]=pos[i*3]; targetPos[i*3+1]=pos[i*3+1]; targetPos[i*3+2]=pos[i*3+2];
+  const li=i%468;
+  jitter[i*3]=(Math.random()-0.5)*0.04;
+  jitter[i*3+1]=(Math.random()-0.5)*0.04;
+  jitter[i*3+2]=(Math.random()-0.5)*0.15;
+  pos[i*3]=(Math.random()-0.5)*4; pos[i*3+1]=(Math.random()-0.5)*4; pos[i*3+2]=0;
+  targetPos[i*3]=pos[i*3]; targetPos[i*3+1]=pos[i*3+1]; targetPos[i*3+2]=0;
   colors[i*3]=1; colors[i*3+1]=1; colors[i*3+2]=1;
 }
-let hasBody=false, mouseX=0, mouseY=0, bbox={minX:0.3,maxX:0.7,minY:0.1,maxY:0.9};
+let hasFace=false, mouseX=0, mouseY=0, photoMode=false, photoPts=null;
 addEventListener('mousemove',e=>{ mouseX=(e.clientX/innerWidth-0.5)*0.5; mouseY=(e.clientY/innerHeight-0.5)*0.25; });
-addEventListener('touchmove',e=>{ const t=e.touches[0]; mouseX=(t.clientX/innerWidth-0.5)*0.5; mouseY=(t.clientY/innerHeight-0.5)*0.25; },{passive:true});
 
-const segCanvas=document.getElementById('segCanvas');
-const segCtx=segCanvas.getContext('2d',{willReadFrequently:true});
-let facePts=null;
 const faceMesh=new FaceMesh({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/face_mesh/${f}`});
 faceMesh.setOptions({maxNumFaces:1,refineLandmarks:true,minDetectionConfidence:0.5,minTrackingConfidence:0.5});
-faceMesh.onResults(r=>{ if(r.multiFaceLandmarks?.length) facePts=r.multiFaceLandmarks[0]; });
-
-const selfieSeg=new SelfieSegmentation({locateFile:f=>`https://cdn.jsdelivr.net/npm/@mediapipe/selfie_segmentation/${f}`});
-selfieSeg.setOptions({modelSelection:1});
-selfieSeg.onResults(res=>{
-  if(!res.segmentationMask) return;
-  hasBody=true;
-  segCtx.drawImage(res.segmentationMask,0,0,segCanvas.width,segCanvas.height);
-  let img; try{ img=segCtx.getImageData(0,0,segCanvas.width,segCanvas.height).data; }catch(e){return;}
-  // Find body bounding box for auto-centre
-  let minX=999,maxX=-1,minY=999,maxY=-1,cnt=0;
-  for(let y=0;y<segCanvas.height;y+=2){ for(let x=0;x<segCanvas.width;x+=2){ if(img[(y*segCanvas.width+x)*4+3]>100){ const ux=x/segCanvas.width, uy=y/segCanvas.height; if(ux<minX)minX=ux; if(ux>maxX)maxX=ux; if(uy<minY)minY=uy; if(uy>maxY)maxY=uy; cnt++; } } }
-  if(cnt>200){ bbox.minX=minX; bbox.maxX=maxX; bbox.minY=minY; bbox.maxY=maxY; }
-  const cx=(bbox.minX+bbox.maxX)/2, cy=(bbox.minY+bbox.maxY)/2;
-  const bw=Math.max(bbox.maxX-bbox.minX,0.2), bh=Math.max(bbox.maxY-bbox.minY,0.2);
-  const scaleX=2.1/bw, scaleY=2.9/bh, scale=Math.min(scaleX,scaleY);
-
+faceMesh.onResults(res=>{
+  if(!res.multiFaceLandmarks?.length){ document.getElementById('debug').textContent='Face: NOT FOUND — move closer / more light'; return; }
+  if(photoMode) return;
+  hasFace=true;
+  const lm=res.multiFaceLandmarks[0];
+  document.getElementById('debug').textContent='Face: FOUND ✓ '+lm.length+' points';
+  // Nose for centering
+  const nose=lm[1];
+  const cx=nose.x, cy=nose.y;
   for(let i=0;i<COUNT;i++){
-    const u=homeUV[i*2], v=homeUV[i*2+1];
-    // Check if this fixed home is inside body mask
-    const mx=Math.floor(u*segCanvas.width), my=Math.floor(v*segCanvas.height);
-    const a=img[(my*segCanvas.width+mx)*4+3];
-    // MIRROR FIX: front camera is mirrored - flip X
-    const uFlip=1-u;
-    if(a>90){
-      // Inside body -> show at centred, scaled position
-      targetPos[i*3]=(uFlip-cx)*scale;
-      targetPos[i*3+1]=(cy-v)*scale+0.05;
-      targetPos[i*3+2]=(Math.random()-0.5)*0.08;
-      const shade=0.8+((a/255)*0.2);
-      colors[i*3]=shade; colors[i*3+1]=shade; colors[i*3+2]=shade;
-    } else {
-      // Outside body -> push to edge, make invisible by moving far behind and dark
-      targetPos[i*3]=(uFlip-cx)*scale*1.4;
-      targetPos[i*3+1]=(cy-v)*scale;
-      targetPos[i*3+2]=-2.5;
-      colors[i*3]=0; colors[i*3+1]=0; colors[i*3+2]=0;
+    const p=lm[i%468];
+    // Scale face to fill screen like Avi: 3.4x, centred on nose, MIRRORED correctly
+    // FaceMesh x is already mirrored for selfie, so use (p.x-cx) directly, no flip
+    targetPos[i*3]=(p.x-cx)*3.4 + jitter[i*3];
+    targetPos[i*3+1]=(cy-p.y)*3.4 + 0.15 + jitter[i*3+1];
+    targetPos[i*3+2]=p.z*-1.2 + jitter[i*3+2];
+    // Shoulder: points near chin / jaw (indices 400+) get pushed down/out to make shoulder shape
+    // Use face outline points to fake shoulders - points with y > 0.6 become shoulder
+    if(p.y>cy+0.22){
+      targetPos[i*3]*=1.7; // widen shoulders
+      targetPos[i*3+1]-=0.35; // drop down
     }
-  }
-  // Face detail: face landmarks override for sharp eyes/glasses
-  if(facePts){
-    for(let i=0;i<COUNT*0.45;i++){
-      const fp=facePts[i % facePts.length];
-      // FaceMesh is already mirrored in MediaPipe, flip to match
-      targetPos[i*3]=( (1-fp.x)-cx)*scale;
-      targetPos[i*3+1]=(cy-fp.y)*scale+0.05;
-      targetPos[i*3+2]=fp.z*-0.3;
-      colors[i*3]=1; colors[i*3+1]=1; colors[i*3+2]=1;
-    }
+    const v=0.85+Math.random()*0.15;
+    colors[i*3]=v; colors[i*3+1]=v; colors[i*3+2]=v;
   }
   geo.attributes.color.needsUpdate=true;
 });
 
+// PHOTO MODE - Always works, even if camera fails
+document.getElementById('photoInput').onchange=e=>{
+  const file=e.target.files[0]; if(!file) return;
+  const img=new Image(); img.onload=()=>{
+    const c=document.createElement('canvas'); c.width=200; c.height=200;
+    const ctx=c.getContext('2d'); ctx.drawImage(img,0,0,200,200);
+    const data=ctx.getImageData(0,0,200,200).data;
+    photoMode=true; hasFace=true;
+    document.getElementById('debug').textContent='Photo Mode ✓';
+    // Convert photo brightness to particles
+    for(let i=0;i<COUNT;i++){
+      const x=Math.floor(Math.random()*200), y=Math.floor(Math.random()*200);
+      const idx=(y*200+x)*4;
+      const bright=(data[idx]+data[idx+1]+data[idx+2])/3;
+      if(bright>30){
+        targetPos[i*3]=(x/200-0.5)*2.8;
+        targetPos[i*3+1]=(0.5-y/200)*3.2;
+        targetPos[i*3+2]=(Math.random()-0.5)*0.2;
+        const v=bright/255; colors[i*3]=v; colors[i*3+1]=v; colors[i*3+2]=v;
+      }
+    }
+    geo.attributes.color.needsUpdate=true;
+  };
+  img.src=URL.createObjectURL(file);
+};
+
 document.getElementById('startBtn').onclick=async()=>{
   document.getElementById('startBtn').style.display='none';
   document.getElementById('status').style.display='block';
-  setTimeout(()=>document.getElementById('status').style.display='none',5000);
+  document.getElementById('debug').style.display='block';
+  setTimeout(()=>document.getElementById('status').style.display='none',6000);
   const video=document.getElementById('video');
-  const cam=new Camera(video,{onFrame:async()=>{ await selfieSeg.send({image:video}); await faceMesh.send({image:video}); },width:640,height:480});
-  cam.start();
+  try{
+    const cam=new Camera(video,{onFrame:async()=>{await faceMesh.send({image:video})},width:640,height:480});
+    cam.start();
+  }catch(err){ document.getElementById('debug').textContent='Camera blocked - use Photo Mode below'; }
   setTimeout(()=>speakAboutMe(),1000);
 };
 
 function animate(){
   requestAnimationFrame(animate);
   for(let i=0;i<COUNT;i++){
-    const s=hasBody?0.16:0.02;
+    const s=hasFace?0.18:0.02;
     pos[i*3]+=(targetPos[i*3]-pos[i*3])*s;
     pos[i*3+1]+=(targetPos[i*3+1]-pos[i*3+1])*s;
     pos[i*3+2]+=(targetPos[i*3+2]-pos[i*3+2])*s;
